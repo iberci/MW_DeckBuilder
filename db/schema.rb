@@ -11,18 +11,24 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121112200719) do
+ActiveRecord::Schema.define(:version => 20121112203119) do
+
+  create_table "cards", :force => true do |t|
+    t.string "name"
+  end
+
+  create_table "school_levels", :id => false, :force => true do |t|
+    t.integer "school_id",                :null => false
+    t.integer "card_id",                  :null => false
+    t.integer "level",     :default => 1, :null => false
+  end
 
   create_table "schools", :force => true do |t|
-    t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.string "name"
   end
 
   create_table "types", :force => true do |t|
-    t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.string "name"
   end
 
 end
