@@ -5,3 +5,26 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+#
+
+Type.create([
+  {name:'Creature'},
+  {name:'Enchantment'},
+  {name:'Conjuration'},
+  {name:'Incantation'},
+  {name:'Attack'},
+  {name:'Equipment'}
+])
+
+School.create([
+  {name:'Air'},
+  {name:'Arcane'},
+  {name:'Dark'},
+  {name:'Earth'},
+  {name:'Fire'},
+  {name:'Holy'},
+  {name:'Mind'},
+  {name:'Nature'},
+  {name:'War'},
+  {name:'Water'}
+])
