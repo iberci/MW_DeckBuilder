@@ -8,8 +8,8 @@ class CreateSchoolLevels < ActiveRecord::Migration
     end
 
     connection.execute 'alter table school_levels add primary key (card_id, school_id)'
-    connection.execute 'alter table school_levels add constraint fk_school_id foreign key (school_id) references schools(id)'
-    connection.execute 'alter table school_levels add constraint fk_card_id foreign key (card_id) references cards(id)'
+    connection.execute 'alter table school_levels add constraint fk_school_id foreign key (school_id) references schools(id on delete cascade)'
+    connection.execute 'alter table school_levels add constraint fk_card_id foreign key (card_id) references cards(id) on delete cascade'
   end
 
   def down

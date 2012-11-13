@@ -16,7 +16,7 @@ Type.create([
   {name:'Equipment'}
 ])
 
-School.create([
+air, arcane, dark, earth, fire, holy, mind, nature, war, water = *School.create([
   {name:'Air'},
   {name:'Arcane'},
   {name:'Dark'},
@@ -28,3 +28,28 @@ School.create([
   {name:'War'},
   {name:'Water'}
 ])
+
+wizard_air, wizard_water, wizard_earth, wizard_fire, priestess, beastmaster, sorcerer = *Mage.create([
+  {name:'Wizard(Air)'},
+  {name:'Wizard(Water)'},
+  {name:'Wizard(Earth)'},
+  {name:'Wizard(Fire)'},
+  {name:'Priestess'},
+  {name:'Beastmaster'},
+  {name:'Sorcerer'}
+])
+
+wizard_air.mage_schools.create!(school:arcane, cost:1)
+wizard_air.mage_schools.create!(school:air, cost:1)
+wizard_air.mage_schools.create!(school:earth, cost:2)
+wizard_air.mage_schools.create!(school:water, cost:2)
+wizard_air.mage_schools.create!(school:fire, cost:2)
+
+wizard_water.mage_schools.create!(school:arcane, cost:1)
+wizard_water.mage_schools.create!(school:air, cost:2)
+wizard_water.mage_schools.create!(school:earth, cost:2)
+wizard_water.mage_schools.create!(school:water, cost:1)
+wizard_water.mage_schools.create!(school:fire, cost:2)
+
+priestess.mage_schools.create!(school:air, cost:2)
+priestess.mage_schools.create!(school:dark, cost:3)
