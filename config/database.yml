@@ -1,8 +1,8 @@
 development:
   adapter: postgresql
   encoding: unicode
-  username: ilan
-  password:
+  username: mw
+  password: mw
   database: mw_development
   pool: 5
 
@@ -12,8 +12,8 @@ development:
 test:
   adapter: postgresql
   encoding: unicode
-  username: ilan
-  password:
+  username: mw
+  password: mw
   database: mw_test
   user: ilan
   pool: 5
@@ -21,8 +21,8 @@ test:
 production:
   adapter: postgresql
   encoding: unicode
-  username: ilan
-  password:
+  username: mw
+  password: mw
   user: ilan
   database: mw_production
   pool: 5

@@ -4,7 +4,7 @@ gem 'rails', '3.2.6'
 
 gem 'pg'
 gem 'activerecord-postgresql-adapter'
-gem 'therubyracer'
+#gem 'therubyracer'
 gem 'multi_json'
 gem 'composite_primary_keys'
 
@@ -30,7 +30,5 @@ gem 'jquery-rails'
 
 # Deploy with Capistrano
 # gem 'capistrano'
-
-gem 'debugger'
 
 
