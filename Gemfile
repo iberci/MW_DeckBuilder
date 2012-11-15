@@ -4,7 +4,10 @@ gem 'rails', '3.2.6'
 
 gem 'pg'
 gem 'activerecord-postgresql-adapter'
-#gem 'therubyracer'
+
+if RUBY_PLATFORM.include? 'linux'
+  gem 'therubyracer'
+end
 gem 'multi_json'
 gem 'composite_primary_keys'
 
