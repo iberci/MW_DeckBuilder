@@ -11,34 +11,48 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121113141911) do
+ActiveRecord::Schema.define(:version => 20121116020858) do
 
-  create_table "cards", :force => true do |t|
-    t.string "name"
+  create_table "card_traits", :id => false, :force => true do |t|
+    t.string "card_code",  :null => false
+    t.string "trait_name", :null => false
+  end
+
+  create_table "cards", :id => false, :force => true do |t|
+    t.string "name",        :null => false
+    t.string "code",        :null => false
+    t.string "description"
+    t.string "type",        :null => false
   end
 
   create_table "mage_schools", :id => false, :force => true do |t|
-    t.integer "mage_id",                  :null => false
-    t.integer "school_id",                :null => false
-    t.integer "cost",      :default => 1, :null => false
+    t.integer "cost",        :default => 1, :null => false
+    t.string  "school_name",                :null => false
+    t.string  "mage_name",                  :null => false
   end
 
-  create_table "mages", :force => true do |t|
-    t.string "name"
+  create_table "mages", :id => false, :force => true do |t|
+    t.string "name", :null => false
   end
 
   create_table "school_levels", :id => false, :force => true do |t|
-    t.integer "school_id",                :null => false
-    t.integer "card_id",                  :null => false
-    t.integer "level",     :default => 1, :null => false
+    t.integer "level",       :default => 1, :null => false
+    t.string  "school_name",                :null => false
+    t.string  "card_code",                  :null => false
   end
 
-  create_table "schools", :force => true do |t|
-    t.string "name"
+  create_table "schools", :id => false, :force => true do |t|
+    t.string "name", :null => false
   end
 
-  create_table "types", :force => true do |t|
-    t.string "name"
+  create_table "traits", :id => false, :force => true do |t|
+    t.string  "name",     :null => false
+    t.boolean "additive"
+    t.integer "value"
+  end
+
+  create_table "types", :id => false, :force => true do |t|
+    t.string "name", :null => false
   end
 
 end
