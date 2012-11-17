@@ -34,9 +34,10 @@ class Initial < ActiveRecord::Migration
       t.string "name",                     :null => false
       t.string "code",                     :null => false
       t.string "description"
-      t.string "type",  :null => false
+      t.string "type_name",  :null => false
     end
     pk('cards', 'code')
+    fk('cards', 'type_name', 'types', 'name')
 
     create_table "mages", :id => false, :force => true do |t|
       t.string "name", :null => false

@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(:version => 20121116020858) do
     t.string "name",        :null => false
     t.string "code",        :null => false
     t.string "description"
-    t.string "type",        :null => false
+    t.string "type_name",   :null => false
   end
 
   create_table "mage_schools", :id => false, :force => true do |t|
