@@ -24,8 +24,7 @@ class Initial < ActiveRecord::Migration
 
     create_table "traits", :id => false, :force => true do |t|
       t.string  "name",     :null => false
-      t.boolean "additive"
-      t.integer "value"
+      t.boolean "additive", :null => false, :default => false
     end
 
     pk('traits', 'name')
@@ -51,7 +50,8 @@ class Initial < ActiveRecord::Migration
 
     create_table "card_traits", :id => false, :force => true do |t|
       t.string "card_code", :null => false
-      t.string "trait_name",     :null => false
+      t.string "trait_name",:null => false
+      t.integer "level", :default => 1, :null => false
     end
     pk('card_traits', 'card_code', 'trait_name')
     fk('card_traits', 'card_code', 'cards', 'code')
@@ -74,9 +74,19 @@ class Initial < ActiveRecord::Migration
     pk('school_levels', 'card_code', 'school_name')
     fk('school_levels', 'school_name', 'schools', 'name')
     fk('school_levels', 'card_code', 'cards', 'code')
+
+    create_table "trait_levels", :id => false, :force => true do |t|
+      t.string 'card_code', :null => false
+      t.string 'trait_name', :null => false
+      t.integer 'level', :null => false, :default => 1
+    end
+    pk('trait_levels', 'card_code', 'trait_name')
+    fk('trait_levels', 'card_code' , 'cards', 'code')
+    fk('trait_levels', 'trait_name' , 'traits', 'name')
   end
 
   def down
+    drop_table "trait_levels"
     drop_table "school_levels"
     drop_table "mage_schools"
     drop_table "card_traits"

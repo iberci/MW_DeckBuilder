@@ -14,8 +14,9 @@
 ActiveRecord::Schema.define(:version => 20121116020858) do
 
   create_table "card_traits", :id => false, :force => true do |t|
-    t.string "card_code",  :null => false
-    t.string "trait_name", :null => false
+    t.string  "card_code",                 :null => false
+    t.string  "trait_name",                :null => false
+    t.integer "level",      :default => 1, :null => false
   end
 
   create_table "cards", :id => false, :force => true do |t|
@@ -45,10 +46,15 @@ ActiveRecord::Schema.define(:version => 20121116020858) do
     t.string "name", :null => false
   end
 
+  create_table "trait_levels", :id => false, :force => true do |t|
+    t.string  "card_code",                 :null => false
+    t.string  "trait_name",                :null => false
+    t.integer "level",      :default => 1, :null => false
+  end
+
   create_table "traits", :id => false, :force => true do |t|
-    t.string  "name",     :null => false
-    t.boolean "additive"
-    t.integer "value"
+    t.string  "name",                        :null => false
+    t.boolean "additive", :default => false, :null => false
   end
 
   create_table "types", :id => false, :force => true do |t|
