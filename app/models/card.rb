@@ -1,5 +1,5 @@
 class Card < ActiveRecord::Base
-  attr_accessible :type, :code, :name, :description, :type_name, :cast_cost
+  attr_accessible :type, :code, :name, :description, :type_name, :cast_cost, :or_cost, :novice
   set_primary_key :code
 
   validates_uniqueness_of :code

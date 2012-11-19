@@ -20,11 +20,13 @@ ActiveRecord::Schema.define(:version => 20121116020858) do
   end
 
   create_table "cards", :id => false, :force => true do |t|
-    t.string  "code",        :null => false
-    t.integer "cast_cost",   :null => false
-    t.string  "name",        :null => false
+    t.string  "code",                           :null => false
+    t.integer "cast_cost",                      :null => false
+    t.string  "name",                           :null => false
     t.string  "description"
-    t.string  "type_name",   :null => false
+    t.string  "type_name",                      :null => false
+    t.boolean "or_cost",     :default => false, :null => false
+    t.boolean "novice",      :default => false, :null => false
   end
 
   create_table "mage_schools", :id => false, :force => true do |t|

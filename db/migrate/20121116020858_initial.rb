@@ -35,6 +35,8 @@ class Initial < ActiveRecord::Migration
       t.string "name",                     :null => false
       t.string "description"
       t.string "type_name",  :null => false
+      t.boolean "or_cost",  :null => false, :default => false
+      t.boolean 'novice', :null => false, :default => false
     end
     pk('cards', 'code')
     fk('cards', 'type_name', 'types', 'name')
