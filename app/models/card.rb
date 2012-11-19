@@ -11,4 +11,7 @@ class Card < ActiveRecord::Base
   has_many :traits, :through => :trait_levels
   belongs_to :type, :foreign_key => :type_name
 
+  has_many :card_decks, :foreign_key => 'card_code'
+  has_many :decks, :through => 'card_decks'
+
 end

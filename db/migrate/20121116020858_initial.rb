@@ -86,6 +86,17 @@ class Initial < ActiveRecord::Migration
     pk('trait_levels', 'card_code', 'trait_name')
     fk('trait_levels', 'card_code' , 'cards', 'code')
     fk('trait_levels', 'trait_name' , 'traits', 'name')
+
+    create_table "decks", :id => false do |t|
+      t.string 'name', :null => false
+    end
+    pk('decks', 'name')
+
+    create_table "card_decks", :id => false do |t|
+      t.string :deck_name, :null => false
+      t.string :card_code, :null => false
+      t.integer :amount, :null => false, :default => 1
+    end
   end
 
   def down
