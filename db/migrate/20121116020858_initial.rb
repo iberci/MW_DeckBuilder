@@ -30,8 +30,9 @@ class Initial < ActiveRecord::Migration
     pk('traits', 'name')
 
     create_table "cards", :id => false, :force => true do |t|
-      t.string "name",                     :null => false
       t.string "code",                     :null => false
+      t.integer 'cast_cost', :null => false
+      t.string "name",                     :null => false
       t.string "description"
       t.string "type_name",  :null => false
     end

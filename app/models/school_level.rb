@@ -1,7 +1,8 @@
 class SchoolLevel < ActiveRecord::Base
 
-  attr_protected
-  self.primary_keys :card_id, :school_id
-  belongs_to :school
-  belongs_to :card
+  attr_accessible :school, :level, :card_code, :card, :school_name
+
+  set_primary_keys :card_code, :school_name
+  belongs_to :school, :foreign_key => 'school_name'
+  belongs_to :card, :foreign_key => 'card_code'
 end
