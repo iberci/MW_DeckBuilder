@@ -14,23 +14,14 @@ class Card < ActiveRecord::Base
   has_many :card_decks, :foreign_key => 'card_code'
   has_many :decks, :through => 'card_decks'
 
-  scope :air, -> { joins(:schools).where("schools.name = 'Air'") }
-  scope :arcane, -> { joins(:schools).where("schools.name = 'Arcane'") }
-  scope :dark, -> { joins(:schools).where("schools.name = 'Dark'") }
-  scope :earth, -> { joins(:schools).where("schools.name = 'Earth'") }
-  scope :fire, -> { joins(:schools).where("schools.name = 'Fire'") }
-  scope :holy, -> { joins(:schools).where("schools.name = 'Holy'") }
-  scope :mind, -> { joins(:schools).where("schools.name = 'Mind'") }
-  scope :nature, -> { joins(:schools).where("schools.name = 'Nature'") }
-  scope :war, -> { joins(:schools).where("schools.name = 'War'") }
-  scope :water, -> { joins(:schools).where("schools.name = 'Water'") }
+  scope :for_schools, ->(*s) {
+    joins(:schools).where("schools.name in (?)", s.flatten.reject(&:blank?).map{|sc| sc.to_s.capitalize})
+  }
+  scope :for_school, ->(*s) {for_schools(*s)}
 
-  scope :attack, -> {where(type_name:'Attack')}
-  scope :conjuration, -> {where(type_name:'Conjuration')}
-  scope :creature, -> {where(type_name:'Enchantment')}
-  scope :enchantment, -> {where(type_name:'Enchantment')}
-  scope :equipment, -> {where(type_name:'Equipment')}
-  scope :incantation, -> {where(type_name:'Incantation')}
-
+  scope :for_types, ->(*t) {
+    where("type_name in (?)", t.flatten.reject(&:blank?).map{|ty|ty.to_s.capitalize})
+  }
+  scope :for_type, ->(*t) {for_types(*t)}
 
 end
