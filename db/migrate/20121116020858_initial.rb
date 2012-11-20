@@ -30,13 +30,14 @@ class Initial < ActiveRecord::Migration
     pk('traits', 'name')
 
     create_table "cards", :id => false, :force => true do |t|
-      t.string "code",                     :null => false
-      t.integer 'cast_cost', :null => false
-      t.string "name",                     :null => false
+      t.string "code", :null => false
+      t.integer 'cast_cost'
+      t.string "name", :null => false
       t.string "description"
       t.string "type_name",  :null => false
       t.boolean "or_cost",  :null => false, :default => false
       t.boolean 'novice', :null => false, :default => false
+      t.integer 'deck_max', :null => false, :default => 4
     end
     pk('cards', 'code')
     fk('cards', 'type_name', 'types', 'name')
@@ -100,6 +101,8 @@ class Initial < ActiveRecord::Migration
   end
 
   def down
+    drop_table "card_decks"
+    drop_table "decks"
     drop_table "trait_levels"
     drop_table "school_levels"
     drop_table "mage_schools"
