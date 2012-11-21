@@ -1,5 +1,4 @@
 $().ready(function() {
-
  
   var buildParams = function() {
     return {
@@ -14,7 +13,9 @@ $().ready(function() {
     }
   }
 
-  var populateQueryResults = function() {
+  var populateQueryResults = function(cards) {
+    _.each(cards, function(card) {
+    })
   }
 
   var query = _.throttle(function() {
