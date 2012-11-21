@@ -1,1 +1,95 @@
-<%= link_to "Publish Card", new_card_path %>
+<div class="container">
+  <div class="row">
+    <img align="center" src="assets/header.jpg" border="0" alt="Block" width="737" height="339"/>
+  </div>
+  <br/>
+  <div class="row">
+    <div id="filter_container" class="span4">
+      <div class="row">
+        <div class="well">
+          <label class="radio">
+            <input type="radio" class="radio" name="mage" value="Wizard(air)"/>Wizard(Air)
+          </label>
+          <label class="radio">
+            <input type="radio" class="radio" name="mage" value="Wizard(water)"/>Wizard(Water)
+	  </label>
+      	  <label class="radio">
+            <input type="radio" class="radio" name="mage" value="Wizard(earth)"/>Wizard(Earth)
+          </label>
+          <label class="radio">
+            <input type="radio" class="radio" name="mage" value="Wizard(Fire)"/>Wizard(Fire)
+	  </label>
+      	  <label class="radio">
+            <input type="radio" class="radio" name="mage" value="Beastmaster"/>Beastmaster
+	  </label>
+      	  <label class="radio">
+            <input type="radio" class="radio" name="mage" value="warlock"/>Warlock
+	  </label>
+      	  <label class="radio">
+            <input type="radio" class="radio" name="mage" value="priestess"/>Priestess
+	  </label>
+        </div>
+      </div>
+        </div>
+    <div class="span7 offset1">
+      <div class="row">
+        <div class="well">
+          <div id="for_type" class="btn-group">
+            <button type="button" data-val="attack" class="btn btn-info btn-small" data-toggle="button">Attacks</button>
+            <button type="button" data-val="creature" class="btn btn-info btn-small" data-toggle="button">Creatures</button>
+            <button type="button" data-val="conjuration" class="btn btn-info btn-small" data-toggle="button">Conjurations</button>
+            <button type="button" data-val="enchantment" class="btn btn-info btn-small" data-toggle="button">Enchantments</button>
+            <button type="button" data-val="equipment" class="btn btn-info btn-small" data-toggle="button">Equipment</button>
+            <button type="button" data-val="incantation" class="btn btn-info btn-small" data-toggle="button">Incantations</button>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div id="cards_container" class="well">
+          <div id="for_school" class="btn-group">
+            <button type="button" data-val="air" class="btn btn-info btn-small" data-toggle="button">Air</button>
+            <button type="button" data-val="arcane" class="btn btn-info btn-small" data-toggle="button">Arcane</button>
+            <button type="button" data-val="dark" class="btn btn-info btn-small" data-toggle="button">Dark</button>
+            <button type="button" data-val="earth" class="btn btn-info btn-small" data-toggle="button">Earth</button>
+            <button type="button" data-val="fire" class="btn btn-info btn-small" data-toggle="button">Fire</button>
+            <button type="button" data-val="holy" class="btn btn-info btn-small" data-toggle="button">Holy</button>
+            <button type="button" data-val="mind" class="btn btn-info btn-small" data-toggle="button">Mind</button>
+            <button type="button" data-val="nature" class="btn btn-info btn-small" data-toggle="button">Nature</button>
+            <button type="button" data-val="war" class="btn btn-info btn-small" data-toggle="button">War</button>
+            <button type="button" data-val="water" class="btn btn-info btn-small" data-toggle="button">Water</button>
+	  </div>
+	</div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div id="filter_container" class="span4">
+      <table id="cost_table" class="table table-bordered">
+        <thead>
+          <tr>
+	    <th>Cost</th>
+	    <th>Code</th>
+	    <th>Title</th>
+	    <th></th>
+	  <tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+    <div class="span7 offset1">
+      <table id="card_table" class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Code</th>
+            <th>Title</th>
+            <th>Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  <div>
+</div>

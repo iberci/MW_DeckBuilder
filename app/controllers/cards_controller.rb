@@ -1,5 +1,17 @@
 class CardsController < ApplicationController
   def index
+    @cards = Card.order('name')
+    @cards = @cards.send(:for_school, params[:for_school]) if params[:for_school]
+    @cards = @cards.send(:for_type, params[:for_type]) if params[:for_type]
+
+    @cards.paginate(page:(params[:page] || 1), per_page:(params[:per_page] || 20))
+    
+    respond_to do |format|
+      format.html
+      format.json do 
+        render json:@cards.to_json
+      end
+    end
   end
 
   def new

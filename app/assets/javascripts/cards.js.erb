@@ -1,0 +1,38 @@
+$().ready(function() {
+
+  var mageMap = {}
+  <% for mage in Mage.all %> mageMap['<%= mage.name %>'] = {}; <% end  %>
+
+  <% for ms in MageSchool.all %> mageMap['<%= ms.mage_name %>']['<%= ms.school_name %>'] = <%= ms.cost %>; <% end %>
+  
+  var buildParams = function() {
+    return {
+      for_type : _.map($("#for_type button.active"), function(e) {
+        return $(e).data("val")
+      }),
+      for_school : _.map($("#for_school button.active"), function(e) {
+        return $(e).data("val")
+      }),
+      page : 1,
+      per_page : 20
+    }
+  }
+
+  var populateQueryResults = function() {
+  }
+
+  var query = _.throttle(function() {
+    $.ajax({
+      url: '/cards.json',
+      data: buildParams(),
+      success: function(data, textStatus, jqXHR) {
+        populateQueryResults(data)
+      }, 
+      dataType: 'json'
+    })
+  }, 2000)
+
+  query()
+
+  $('#for_type button, #for_school button').click(query)
+})

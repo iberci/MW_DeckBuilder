@@ -1,6 +1,6 @@
 class Card < ActiveRecord::Base
   attr_accessible :type, :code, :name, :description, :type_name, :cast_cost, :or_cost, :novice, :deck_max
-  set_primary_key :code
+  self.primary_key = 'code'
 
   validates_uniqueness_of :code
   validates_presence_of :name
