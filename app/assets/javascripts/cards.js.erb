@@ -1,10 +1,6 @@
 $().ready(function() {
 
-  var mageMap = {}
-  <% for mage in Mage.all %> mageMap['<%= mage.name %>'] = {}; <% end  %>
-
-  <% for ms in MageSchool.all %> mageMap['<%= ms.mage_name %>']['<%= ms.school_name %>'] = <%= ms.cost %>; <% end %>
-  
+ 
   var buildParams = function() {
     return {
       for_type : _.map($("#for_type button.active"), function(e) {
@@ -32,7 +28,14 @@ $().ready(function() {
     })
   }, 2000)
 
-  query()
 
-  $('#for_type button, #for_school button').click(query)
+  // GENERATED
+  var mageMap = {}
+  <% for mage in Mage.all %> mageMap['<%= mage.name %>'] = {}; <% end  %>
+  <% for ms in MageSchool.all %> mageMap['<%= ms.mage_name %>']['<%= ms.school_name %>'] = <%= ms.cost %>; <% end %>
+ 
+
+  $('#mage_select').one('change', 'input', function() {
+    $('#for_type button, #for_school button').click(query)
+  })
 })
