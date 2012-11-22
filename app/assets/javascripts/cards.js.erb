@@ -2,19 +2,79 @@ $().ready(function() {
  
   var buildParams = function() {
     return {
-      for_type : _.map($("#for_type button.active"), function(e) {
-        return $(e).data("val")
+      for_type : _.map($("#for_type input:checked"), function(e) {
+        return $(e).val()
       }),
-      for_school : _.map($("#for_school button.active"), function(e) {
-        return $(e).data("val")
+      for_school : _.map($("#for_school input:checked"), function(e) {
+        return $(e).val()
       }),
       page : 1,
       per_page : 20
     }
   }
 
+  var mage = function() {
+     return $('input[name="mage"]:checked').val()
+  }
+
+  var calculateCost = function(card) {
+     var costMap = mageMap[mage()]
+     var costs =  _.map(card.levels, function(level_detail) {
+        return level_detail.level * costMap[level_detail.school_name]
+     })
+
+
+     if(card.or_cost) { 
+        return _.min(costs)
+     } else {
+        return _.reduce(costs, function(memo, cost) {
+           return memo + cost
+        }, 0)
+     }
+  }
+
+  var buildNumberSelect = function(number) {
+     return select 
+  }
+
+  var addToUserList = function(card) {
+     var cost = calculateCost(card)
+
+     var tbody = $('#cost_table tbody')
+     var tr = $('<tr/>').appendTo(tbody).data(card)  
+     $('<td/>').text(card.code).appendTo(tr)
+     $('<td/>').text(card.name).appendTo(tr)
+
+     var td = $('<td/>').appendTo(tr)
+     var select = $('<select/>').appendTo(td).change(function() {
+        var total = parseInt($(this).val()) * cost
+        $('td.total', tr).text(total) 
+     })
+
+     for(i = 1; i <= parseInt(card.deck_max); i++) {
+       $('<option/>').val(i.toString()).text(i).appendTo(select)
+     }
+
+     $('<td/>').text(cost).appendTo(tr)
+     $('<td class="total"/>').text(cost).appendTo(tr)
+  }
+
   var populateQueryResults = function(cards) {
+
+    var tbody = $("#queried_cards_table tbody").empty() 
     _.each(cards, function(card) {
+       var tr = $('<tr/>').appendTo(tbody).data('card', card) 
+       var td = $('<td/>').appendTo(tr)
+       var button = $("<button class='btn btn-small'/>").appendTo(td).click(function() {
+         addToUserList($(this).closest('tr').data('card'))
+       })
+
+       $('<i class="icon-arrow-left"/>').appendTo(button)
+
+       $('<td/>').appendTo(tr).text(card.code)
+       $('<td/>').appendTo(tr).text(card.name)
+       $('<td/>').appendTo(tr).text(calculateCost(card))
+       $('<td/>').appendTo(tr).text(card.deck_max)
     })
   }
 
@@ -23,6 +83,7 @@ $().ready(function() {
       url: '/cards.json',
       data: buildParams(),
       success: function(data, textStatus, jqXHR) {
+        $("#tables_container").show() 
         populateQueryResults(data)
       }, 
       dataType: 'json'
@@ -37,6 +98,9 @@ $().ready(function() {
  
 
   $('#mage_select').one('change', 'input', function() {
-    $('#for_type button, #for_school button').click(query)
+    $('#for_type input, #for_school input').change(query)
+    $('#filters_container').show() 
   })
+
+  $('#mage_select input').change(query)
 })

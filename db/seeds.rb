@@ -45,49 +45,49 @@ wizard_air, wizard_water, wizard_earth, wizard_fire, priestess, beastmaster, war
 
 # Air Wizard
 { air => 1, arcane => 1, dark => 2, earth => 2, fire => 2, 
-  holy => 2, mind => 2, nature => 2, war => 2, water => 2, fire => 2
+  holy => 2, mind => 2, nature => 2, war => 2, water => 2
 }.each do  |school, cost|
   wizard_air.mage_schools.create!(school:school, cost:cost)
 end
 
 # Water Wizard
 { air => 2, arcane => 1, dark => 2, earth => 2, fire => 2, 
-  holy => 2, mind => 2, nature => 2, war => 2, water => 1, fire => 2
+  holy => 2, mind => 2, nature => 2, war => 2, water => 1
 }.each do  |school, cost|
   wizard_water.mage_schools.create!(school:school, cost:cost)
 end
 
 # Earth Wizard
 { air => 2, arcane => 1, dark => 2, earth => 1, fire => 2, 
-  holy => 2, mind => 2, nature => 2, war => 2, water => 2, fire => 2
+  holy => 2, mind => 2, nature => 2, war => 2, water => 2
 }.each do  |school, cost|
   wizard_earth.mage_schools.create!(school:school, cost:cost)
 end
 
 # Fire Wizard
 { air => 2, arcane => 1, dark => 2, earth => 2, fire => 1, 
-  holy => 2, mind => 2, nature => 2, war => 2, water => 2, fire => 2
+  holy => 2, mind => 2, nature => 2, war => 2, water => 2
 }.each do  |school, cost|
   wizard_fire.mage_schools.create!(school:school, cost:cost)
 end
 
 # Priestess
 { air => 2, arcane => 2, dark => 3, earth => 2, fire => 2, 
-  holy => 1, mind => 2, nature => 2, war => 2, water => 2, fire => 2
+  holy => 1, mind => 2, nature => 2, war => 2, water => 2
 }.each do  |school, cost|
   priestess.mage_schools.create!(school:school, cost:cost)
 end
 
 # Beastmaster
 { air => 2, arcane => 2, dark => 2, earth => 2, fire => 3, 
-  holy => 2, mind => 2, nature => 1, war => 2, water => 2, fire => 2
+  holy => 2, mind => 2, nature => 1, war => 2, water => 2
 }.each do  |school, cost|
   beastmaster.mage_schools.create!(school:school, cost:cost)
 end
 
 # Warlock
 { air => 2, arcane => 2, dark => 1, earth => 2, fire => 1, 
-  holy => 3, mind => 2, nature => 2, war => 2, water => 2, fire => 2
+  holy => 3, mind => 2, nature => 2, war => 2, water => 2
 }.each do  |school, cost|
   warlock.mage_schools.create!(school:school, cost:cost)
 end

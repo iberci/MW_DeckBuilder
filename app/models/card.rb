@@ -20,7 +20,7 @@ class Card < ActiveRecord::Base
   scope :for_school, ->(*s) {for_schools(*s)}
 
   scope :for_types, ->(*t) {
-    where("type_name in (?)", t.flatten.reject(&:blank?).map{|ty|ty.to_s.capitalize})
+    where("cards.type_name in (?)", t.flatten.reject(&:blank?).map{|ty|ty.to_s.capitalize})
   }
   scope :for_type, ->(*t) {for_types(*t)}
 
