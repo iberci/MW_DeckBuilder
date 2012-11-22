@@ -40,14 +40,14 @@ $().ready(function() {
   }
 
   var updateAllCards = function() {
-    _.each($('#cost_table tbody tr'), updateDeckTr)
+    _.each($('#deck_table tbody tr'), updateDeckTr)
     _.each($('#card_list_table tbody tr'), updateListTr)
   }
 
   var addToDeck = function(card) {
 
-     var tbody = $('#cost_table tbody')
-     var tr = $('<tr/>').appendTo(tbody).data('card', card).data('code', card.code)  
+     var tbody = $('#deck_table tbody')
+     var tr = $('<tr/>').appendTo(tbody).data('card', card).attr('data-code', card.code)  
      $('<td/>').text(card.code).appendTo(tr)
      $('<td/>').text(card.name).appendTo(tr)
 
@@ -61,6 +61,7 @@ $().ready(function() {
        var select = $('<select/>').appendTo(td).change(function() {
          card.deck_amount = parseInt($(this).val())
          updateDeckTr(tr)
+         updateTotalDeckCost()
        })
 
        for(i = 1; i <= parseInt(card.deck_max); i++) {
@@ -74,9 +75,11 @@ $().ready(function() {
      $("<button class='btn btn-small'/>").appendTo(td).click(function() {
        enableListCard(card.code)
        $(this).closest('tr').remove()
+       updateTotalDeckCost()
      }).append('<i class="icon-trash"/>')
 
      updateDeckTr(tr)
+     updateTotalDeckCost()
   }
 
   var enableListCard = function(code) {
@@ -84,14 +87,22 @@ $().ready(function() {
   }
 
   var deckHasCard = function(code) {
-    $('#cost_table tbody tr[data-code=' + code + ']').length > 0
+    return $('#deck_table tbody tr[data-code=' + code + ']').length > 0
+  }
+
+  var updateTotalDeckCost = function() {
+    var total = _.reduce($('#deck_table td.total'), function(memo, td) {
+      return memo + parseInt($(td).text())
+    },0)
+    $("#total_deck_cost").text(total)
+    return total
   }
 
   var populateCardList = function(cards) {
 
     var tbody = $("#card_list_table tbody").empty() 
     _.each(cards, function(card) {
-       var tr = $('<tr/>').appendTo(tbody).data('card', card).data('code', card.code) 
+       var tr = $('<tr/>').appendTo(tbody).data('card', card).attr('data-code', card.code) 
        var td = $('<td/>').appendTo(tr)
        var button = $("<button class='btn btn-small'/>").appendTo(td).click(function() {
          addToDeck($(this).closest('tr').data('card'))
