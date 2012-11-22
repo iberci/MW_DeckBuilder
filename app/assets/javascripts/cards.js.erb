@@ -17,63 +17,93 @@ $().ready(function() {
      return $('input[name="mage"]:checked').val()
   }
 
-  var calculateCost = function(card) {
+  var updateCardCost = function(card) {
      var costMap = mageMap[mage()]
      var costs =  _.map(card.levels, function(level_detail) {
-        return level_detail.level * costMap[level_detail.school_name]
+        return level_detail.level * (card.novice ? 1 : costMap[level_detail.school_name])
      })
 
-
-     if(card.or_cost) { 
-        return _.min(costs)
-     } else {
-        return _.reduce(costs, function(memo, cost) {
-           return memo + cost
-        }, 0)
-     }
+     return (card.cost = (card.or_cost) ?  _.min(costs) : _.reduce(costs, function(memo, cost) { return memo + cost }, 0)) 
   }
 
-  var buildNumberSelect = function(number) {
-     return select 
+  var updateDeckTr = function(tr) {
+    var tr = $(tr)
+    var card = $(tr).data('card')
+    $('td.cost', tr).text(card.cost = updateCardCost(card)) 
+    $('td.total', tr).text(card.deck_cost = card.deck_amount * card.cost) 
   }
 
-  var addToUserList = function(card) {
-     var cost = calculateCost(card)
+  var updateListTr = function(tr) {
+    var tr = $(tr)
+    var card = $(tr).data('card')
+    $('td.cost', tr).text(updateCardCost(card))
+  }
+
+  var updateAllCards = function() {
+    _.each($('#cost_table tbody tr'), updateDeckTr)
+    _.each($('#card_list_table tbody tr'), updateListTr)
+  }
+
+  var addToDeck = function(card) {
 
      var tbody = $('#cost_table tbody')
-     var tr = $('<tr/>').appendTo(tbody).data(card)  
+     var tr = $('<tr/>').appendTo(tbody).data('card', card).data('code', card.code)  
      $('<td/>').text(card.code).appendTo(tr)
      $('<td/>').text(card.name).appendTo(tr)
 
      var td = $('<td/>').appendTo(tr)
-     var select = $('<select/>').appendTo(td).change(function() {
-        var total = parseInt($(this).val()) * cost
-        $('td.total', tr).text(total) 
-     })
 
-     for(i = 1; i <= parseInt(card.deck_max); i++) {
-       $('<option/>').val(i.toString()).text(i).appendTo(select)
-     }
+     card.deck_amount = 1 
+     if(card.deck_max === 1) {
+       td.text('1')
+     } else {
 
-     $('<td/>').text(cost).appendTo(tr)
-     $('<td class="total"/>').text(cost).appendTo(tr)
-  }
-
-  var populateQueryResults = function(cards) {
-
-    var tbody = $("#queried_cards_table tbody").empty() 
-    _.each(cards, function(card) {
-       var tr = $('<tr/>').appendTo(tbody).data('card', card) 
-       var td = $('<td/>').appendTo(tr)
-       var button = $("<button class='btn btn-small'/>").appendTo(td).click(function() {
-         addToUserList($(this).closest('tr').data('card'))
+       var select = $('<select/>').appendTo(td).change(function() {
+         card.deck_amount = parseInt($(this).val())
+         updateDeckTr(tr)
        })
 
-       $('<i class="icon-arrow-left"/>').appendTo(button)
+       for(i = 1; i <= parseInt(card.deck_max); i++) {
+         $('<option/>').val(i.toString()).text(i).appendTo(select)
+       }
+     }
+
+     $('<td/>').addClass("cost").appendTo(tr)
+     $('<td/>').addClass("total").appendTo(tr)
+     var td = $('<td/>').appendTo(tr)
+     $("<button class='btn btn-small'/>").appendTo(td).click(function() {
+       enableListCard(card.code)
+       $(this).closest('tr').remove()
+     }).append('<i class="icon-trash"/>')
+
+     updateDeckTr(tr)
+  }
+
+  var enableListCard = function(code) {
+    $('#card_list_table tbody tr[data-code=' + code  + '] button').removeAttr("disabled")
+  }
+
+  var deckHasCard = function(code) {
+    $('#cost_table tbody tr[data-code=' + code + ']').length > 0
+  }
+
+  var populateCardList = function(cards) {
+
+    var tbody = $("#card_list_table tbody").empty() 
+    _.each(cards, function(card) {
+       var tr = $('<tr/>').appendTo(tbody).data('card', card).data('code', card.code) 
+       var td = $('<td/>').appendTo(tr)
+       var button = $("<button class='btn btn-small'/>").appendTo(td).click(function() {
+         addToDeck($(this).closest('tr').data('card'))
+         $(this).attr("disabled", "disabled")
+       }).append('<i class="icon-arrow-left"/>')
+       if(deckHasCard(card.code)) {
+         button.attr("disabled", "disabled")
+       }
 
        $('<td/>').appendTo(tr).text(card.code)
        $('<td/>').appendTo(tr).text(card.name)
-       $('<td/>').appendTo(tr).text(calculateCost(card))
+       $('<td/>').addClass("cost").appendTo(tr).text(updateCardCost(card))
        $('<td/>').appendTo(tr).text(card.deck_max)
     })
   }
@@ -84,11 +114,11 @@ $().ready(function() {
       data: buildParams(),
       success: function(data, textStatus, jqXHR) {
         $("#tables_container").show() 
-        populateQueryResults(data)
+        populateCardList(data)
       }, 
       dataType: 'json'
     })
-  }, 2000)
+  }, 1500)
 
 
   // GENERATED
@@ -100,7 +130,8 @@ $().ready(function() {
   $('#mage_select').one('change', 'input', function() {
     $('#for_type input, #for_school input').change(query)
     $('#filters_container').show() 
+    query()
   })
 
-  $('#mage_select input').change(query)
+  $('#mage_select input').change(updateAllCards)
 })
