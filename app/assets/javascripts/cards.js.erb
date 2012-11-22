@@ -39,9 +39,19 @@ $().ready(function() {
     $('td.cost', tr).text(updateCardCost(card))
   }
 
+  var updateTotalDeckCost = function() {
+    var total = _.reduce($('#deck_table td.total'), function(memo, td) {
+      return memo + parseInt($(td).text())
+    },0)
+    $("#total_deck_cost").text(total)
+    return total
+  }
+
+
   var updateAllCards = function() {
     _.each($('#deck_table tbody tr'), updateDeckTr)
     _.each($('#card_list_table tbody tr'), updateListTr)
+    updateTotalDeckCost()
   }
 
   var addToDeck = function(card) {
@@ -88,14 +98,6 @@ $().ready(function() {
 
   var deckHasCard = function(code) {
     return $('#deck_table tbody tr[data-code=' + code + ']').length > 0
-  }
-
-  var updateTotalDeckCost = function() {
-    var total = _.reduce($('#deck_table td.total'), function(memo, td) {
-      return memo + parseInt($(td).text())
-    },0)
-    $("#total_deck_cost").text(total)
-    return total
   }
 
   var populateCardList = function(cards) {
