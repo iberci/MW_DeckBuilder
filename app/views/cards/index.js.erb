@@ -1,0 +1,12 @@
+$("#tables_container").show()
+$("#card_list_table tbody").empty() 
+
+<% for card in @cards %>
+
+  window.cards.add(<%= raw card.attributes.merge( 
+    levels:(card.school_levels.map {|sl| sl.attributes}),
+    decks:(card.card_decks.map {|cd| cd.attributes})).to_json() %>)
+  
+<% end %>
+
+$('#pagination_div_container').empty().append('<%= will_paginate(@cards) %>')

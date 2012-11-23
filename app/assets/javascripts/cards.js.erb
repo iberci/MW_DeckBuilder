@@ -7,9 +7,7 @@ $().ready(function() {
       }),
       for_school : _.map($("#for_school input:checked"), function(e) {
         return $(e).val()
-      }),
-      page : 1,
-      per_page : 20
+      })
     }
   }
 
@@ -90,6 +88,7 @@ $().ready(function() {
 
      updateDeckTr(tr)
      updateTotalDeckCost()
+     $('#total_cost_container').show()
   }
 
   var enableListCard = function(code) {
@@ -100,38 +99,41 @@ $().ready(function() {
     return $('#deck_table tbody tr[data-code=' + code + ']').length > 0
   }
 
-  var populateCardList = function(cards) {
+  var addListCard = function(card) {
 
-    var tbody = $("#card_list_table tbody").empty() 
-    _.each(cards, function(card) {
-       var tr = $('<tr/>').appendTo(tbody).data('card', card).attr('data-code', card.code) 
-       var td = $('<td/>').appendTo(tr)
-       var button = $("<button class='btn btn-small'/>").appendTo(td).click(function() {
-         addToDeck($(this).closest('tr').data('card'))
-         $(this).attr("disabled", "disabled")
-       }).append('<i class="icon-arrow-left"/>')
-       if(deckHasCard(card.code)) {
-         button.attr("disabled", "disabled")
-       }
+    var tbody = $("#card_list_table tbody")
+    var tr = $('<tr/>').appendTo(tbody).data('card', card).attr('data-code', card.code) 
+    var td = $('<td/>').appendTo(tr)
+    var button = $("<button class='btn btn-small'/>").appendTo(td).click(function() {
+      addToDeck($(this).closest('tr').data('card'))
+      $(this).attr("disabled", "disabled")
+    }).append('<i class="icon-arrow-left"/>')
+    if(deckHasCard(card.code)) {
+      button.attr("disabled", "disabled")
+    }
 
-       $('<td/>').appendTo(tr).text(card.code)
-       $('<td/>').appendTo(tr).text(card.name)
-       $('<td/>').addClass("cost").appendTo(tr).text(updateCardCost(card))
-       $('<td/>').appendTo(tr).text(card.deck_max)
-    })
+    $('<td/>').appendTo(tr).text(card.code)
+    $('<td/>').appendTo(tr).text(card.name)
+    $('<td/>').addClass("cost").appendTo(tr).text(updateCardCost(card))
+    $('<td/>').appendTo(tr).text(card.deck_max)
   }
 
-  var query = _.throttle(function() {
+  window.cards = {
+     add : addListCard
+  }
+
+  var getUrl = function() {
+     var pag = $('.pagination em.current')
+     return '/cards.js?page=' + (pag.length > 0 ? pag.text() : "1")
+  }
+
+  var query = _.throttle(function(href) {
     $.ajax({
-      url: '/cards.json',
+      url: (href || getUrl()),
       data: buildParams(),
-      success: function(data, textStatus, jqXHR) {
-        $("#tables_container").show() 
-        populateCardList(data)
-      }, 
-      dataType: 'json'
+      dataType: 'script'
     })
-  }, 1500)
+  }, 1000)
 
 
   // GENERATED
@@ -141,10 +143,17 @@ $().ready(function() {
  
 
   $('#mage_select').one('change', 'input', function() {
-    $('#for_type input, #for_school input').change(query)
-    $('#filters_container').show() 
+    $('#for_type input, #for_school input').change(function() {
+      query()
+    })
     query()
+    $('#filters_container').show()
   })
 
   $('#mage_select input').change(updateAllCards)
+
+  $('.pagination a').live('click', function() {
+     query($(this).attr("href"))
+     return false
+  })
 })

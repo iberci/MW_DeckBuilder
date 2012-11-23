@@ -1,20 +1,16 @@
 class CardsController < ApplicationController
 
-  DEFAULT_PER_PAGE = 20
+  DEFAULT_PER_PAGE = 10
   def index
-    @cards = Card.order('name').includes(:school_levels)
+    @cards = Card.order('name').includes(:school_levels).includes(:card_decks)
     @cards = @cards.send(:for_school, params[:for_school]) if params[:for_school]
     @cards = @cards.send(:for_type, params[:for_type]) if params[:for_type]
 
     @cards = @cards.paginate(page:(params[:page] || 1), per_page:(params[:per_page] || DEFAULT_PER_PAGE))
 
-    @cards = @cards.map{|c| c.attributes.merge(:levels => c.school_levels.map {|sl| sl.attributes})}
-    
     respond_to do |format|
       format.html
-      format.json do 
-        render json:@cards.to_json
-      end
+      format.js
     end
   end
 

@@ -35,5 +35,3 @@ gem 'jquery-rails'
 # gem 'capistrano'
 
 gem 'will_paginate'
-
-

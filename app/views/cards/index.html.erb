@@ -30,9 +30,11 @@
 	  </label>
         </div>
       </div>
-      <div class="row">
-         <div class="well">
-            <strong><label for="total">Total:<span id="total_deck_cost">0</span><label></strong>
+      <div id="total_cost_container">
+         <div class="row">
+            <div class="well">
+               <strong><label for="total">Total:<span id="total_deck_cost">0</span><label></strong>
+            </div>
          </div>
       </div>
     </div>
@@ -103,6 +105,15 @@
         </thead>
         <tbody>
         </tbody>
+        <tfoot>
+          <tr>
+             <td colspan="5">
+                <div id="pagination_div_container">
+                  <%= will_paginate @cards %>
+                </div>
+            </td>
+          </tr>
+        </tfoot>
       </table>
     </div>
   <div>
