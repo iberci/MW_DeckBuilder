@@ -24,6 +24,14 @@ $().ready(function() {
      return (card.cost = (card.or_cost) ?  _.min(costs) : _.reduce(costs, function(memo, cost) { return memo + cost }, 0)) 
   }
 
+  var getUserDeckMaxes = function() {
+     return {
+       Core: parseInt($('#user_decks_container select[data-deck=Core]').val()),
+       Tome: parseInt($('#user_decks_container select[data-deck=Tome]').val())
+     }
+     
+  }
+
   var updateDeckTr = function(tr) {
     var tr = $(tr)
     var card = $(tr).data('card')
@@ -45,12 +53,60 @@ $().ready(function() {
     return total
   }
 
-
   var updateAllCards = function() {
     _.each($('#deck_table tbody tr'), updateDeckTr)
     _.each($('#card_list_table tbody tr'), updateListTr)
     updateTotalDeckCost()
   }
+
+  var updateCardMax = function(card) {
+     userDeckMaxes = getUserDeckMaxes() 
+     return (card.user_max = _.reduce(card.decks, function(memo, deck) {
+        return memo + deck.amount * userDeckMaxes[deck.deck_name]
+     },0))
+  }
+
+  var updateListCardMaxTr = function(tr) {
+    var tr = $(tr)
+    var card = $(tr).data('card')
+    updateCardMax(card) 
+        
+    var maxText = (card.user_max < card.deck_max) ? "" + card.user_max + "/" + card.deck_max : card.deck_max
+
+    $('td.max', tr).text(maxText)
+  }
+
+  var updateDeckAmountTr = function(tr) {
+    var tr = $(tr)
+    var card = $(tr).data('card')
+    if(!card.deck_amount) {
+       card.deck_amount = 1
+    }
+    updateCardMax(card) 
+
+    var max = _.min([card.deck_max, card.user_max])
+    var td = $('td.amount', tr).empty()
+    if(max === 1) {
+      td.text('1') 
+    } else {
+       var select = $('<select/>').appendTo(td).change(function() {
+         card.deck_amount = parseInt($(this).val())
+         updateDeckTr(tr)
+         updateTotalDeckCost()
+       })
+
+       for(i = 1; i <= max; i++) {
+         $('<option/>').val(i.toString()).text(i).appendTo(select)
+       }
+    }
+  }
+
+  var updateCardMaxes = function() {
+    _.each($('#deck_table tbody tr'), updateDeckAmountTr)
+    _.each($("#card_list_table tbody tr"), updateListCardMaxTr)
+  }
+
+  $('select.deck_count').change(updateCardMaxes)
 
   var addToDeck = function(card) {
 
@@ -59,23 +115,8 @@ $().ready(function() {
      $('<td/>').text(card.code).appendTo(tr)
      $('<td/>').text(card.name).appendTo(tr)
 
-     var td = $('<td/>').appendTo(tr)
-
-     card.deck_amount = 1 
-     if(card.deck_max === 1) {
-       td.text('1')
-     } else {
-
-       var select = $('<select/>').appendTo(td).change(function() {
-         card.deck_amount = parseInt($(this).val())
-         updateDeckTr(tr)
-         updateTotalDeckCost()
-       })
-
-       for(i = 1; i <= parseInt(card.deck_max); i++) {
-         $('<option/>').val(i.toString()).text(i).appendTo(select)
-       }
-     }
+     var td = $('<td/>').addClass("amount").appendTo(tr)
+     updateDeckAmountTr(tr)
 
      $('<td/>').addClass("cost").appendTo(tr)
      $('<td/>').addClass("total").appendTo(tr)
@@ -99,6 +140,7 @@ $().ready(function() {
     return $('#deck_table tbody tr[data-code=' + code + ']').length > 0
   }
 
+
   var addListCard = function(card) {
 
     var tbody = $("#card_list_table tbody")
@@ -115,7 +157,8 @@ $().ready(function() {
     $('<td/>').appendTo(tr).text(card.code)
     $('<td/>').appendTo(tr).text(card.name)
     $('<td/>').addClass("cost").appendTo(tr).text(updateCardCost(card))
-    $('<td/>').appendTo(tr).text(card.deck_max)
+    $('<td/>').addClass('max').appendTo(tr)
+    updateListCardMaxTr(tr)
   }
 
   window.cards = {
