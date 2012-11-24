@@ -283,7 +283,7 @@ end
   ['mw1q24', 'equipment', 'Ring of Asyra', {holy:1}, 1, 2, 0],
   ['mw1q25', 'equipment', 'Ring of Beasts', {nature:1}, 1, 2, 0],
   ['mw1q28', 'equipment', 'Ring of Curses', {dark:1}, 1, 2, 0],
-  ['mw1q29', 'equipment', 'Staff of Asyra', {arcane:2}, 1, 9, 0],
+  ['mw1q29', 'equipment', 'Staff of Asyra', {holy:2}, 1, 9, 0],
   ['mw1q30', 'equipment', 'Staff of Beasts', {nature:2}, 1, 7, 0],
   ['mw1q31', 'equipment', 'Staff of the Arcanum', {arcane:2}, 1, 8, 0],
   ['mw1q32', 'equipment', 'Suppression Cloak', {arcane:2}, 1, 8, 0],
