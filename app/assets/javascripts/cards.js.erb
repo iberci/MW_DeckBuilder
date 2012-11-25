@@ -183,16 +183,15 @@ $().ready(function() {
     })
   }, 1000)
 
-  $('#dload_button_container button').click(function() {
+  $('#dload_button_container button').click(_.throttle(function() {
      var file_type = $(this).data('dload') 
 
      var form = $('#deck_dload_form')
 
      $('#input_fields').empty().append(buildCards()).append($('<input type="hidden"/>').attr("name", 'type').val(file_type))
-
      form.submit()
      return false
-  })
+  }, 2000))
 
   var buildCards = function() {
      return _.map($('#deck_table tbody tr'), function(tr) {
