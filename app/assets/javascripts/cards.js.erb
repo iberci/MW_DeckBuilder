@@ -85,6 +85,7 @@ $().ready(function() {
     updateCardMax(card) 
 
     var max = _.min([card.deck_max, card.user_max])
+    card.deck_amount = _.min([max, card.deck_amount])
     var td = $('td.amount', tr).empty()
     if(max === 1) {
       td.text('1') 
@@ -96,9 +97,13 @@ $().ready(function() {
        })
 
        for(i = 1; i <= max; i++) {
-         $('<option/>').val(i.toString()).text(i).appendTo(select)
+         var op = $('<option/>').val(i.toString()).text(i).appendTo(select)
+         if(i == card.deck_amount) {
+            op.attr('selected', 'selected')
+         }
        }
     }
+    updateDeckTr(tr)
   }
 
   var updateCardMaxes = function() {
