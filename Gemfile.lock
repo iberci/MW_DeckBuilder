@@ -111,6 +111,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord-postgresql-adapter
+  builder
   coffee-rails (~> 3.2.1)
   composite_primary_keys
   jquery-rails

@@ -57,6 +57,7 @@ MWDeckbuilder::Application.routes.draw do
   # match ':controller(/:action(/:id))(.:format)'
 
   resources :cards
+  resources :decks
 
   root :to => 'cards#index'
 end

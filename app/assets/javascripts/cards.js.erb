@@ -172,7 +172,7 @@ $().ready(function() {
 
   var getUrl = function() {
      var pag = $('.pagination em.current')
-     return '/cards.js?page=' + (pag.length > 0 ? pag.text() : "1")
+     return '/cards?page=' + (pag.length > 0 ? pag.text() : "1")
   }
 
   var query = _.throttle(function(href) {
@@ -183,6 +183,24 @@ $().ready(function() {
     })
   }, 1000)
 
+  $('#dload_button_container button').click(function() {
+     var file_type = $(this).data('dload') 
+
+     var form = $('#deck_dload_form')
+
+     $('#input_fields').empty().append(buildCards()).append($('<input type="hidden"/>').attr("name", 'type').val(file_type))
+
+     form.submit()
+     return false
+  })
+
+  var buildCards = function() {
+     return _.map($('#deck_table tbody tr'), function(tr) {
+       var card = $(tr).data('card')
+       var name = 'cards[' + card.code + ']' 
+       return $('<input type="hidden"/>').attr('name', name).val(card.deck_amount)
+     })
+  }
 
   // GENERATED
   var mageMap = {}

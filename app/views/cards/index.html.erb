@@ -25,10 +25,18 @@
       </div>
     </div>
     <div id="total_cost_container">
-      <div class="span3 offset1">
-        <div class="well"> <strong><label for="total">Total Deck Cost:<span id="total_deck_cost">0</span><label></strong>
-
-        </div>
+      <div class="span2 offset1 well">
+        <strong>
+           <label for="total">Total Deck Cost:<span id="total_deck_cost">0</span>
+           </label>
+        </strong>
+      </div>
+      <div id="dload_button_container" class="span3 well btn-group">
+         <label for="download">
+            <button data-dload="xml" class="btn btn-primary btn-small">XML</button>
+            <button data-dload="csv" class="btn btn-primary btn-small">CSV</button>
+            <button data-dload="pdf" class="btn btn-primary btn-small" disabled="disabled">PDF</button>
+         </label>
       </div>
     </div>
   </div>
@@ -141,3 +149,9 @@
     </div>
   </div>
 </div>
+<div style="display:none;">
+   <%= form_tag decks_path, :method => 'get', id:'deck_dload_form' do |f| %>
+      <div id='input_fields'>
+      </div>
+   <% end %>
+</div>   
