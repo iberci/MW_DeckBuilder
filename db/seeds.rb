@@ -243,7 +243,7 @@ end
   ['mw1c28', 'creature', 'Royal Archer', {holy:3}, 2, 12, 1],
   ['mw1c29', 'creature', 'Redclaw, Alpha Male', {nature:4}, 1, 16, 0],
   ['mw1c31', 'creature', 'Samandriel, Angel of Light', {holy:5}, 1, 21, 0],
-  ['mw1c32', 'creature', 'Skeletal Sentry', {holy:2}, 2, 8, 1],
+  ['mw1c32', 'creature', 'Skeletal Sentry', {dark:2}, 2, 8, 1],
   ['mw1c33', 'creature', 'Sosruko, Ferret Companion', {nature:2}, 1, 7, 0],
   ['mw1c34', 'creature', 'Steelclaw Grizzly', {nature:4}, 1, 17, 0],
   ['mw1c35', 'creature', 'Stonegaze Basilisk', {arcane:3}, 1, 12, 0],
