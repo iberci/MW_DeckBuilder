@@ -11,24 +11,21 @@ class CardsController < ApplicationController
     respond_to do |format|
       format.html
       format.js
+      format.json do 
+        render :json => {
+          :current_page => @cards.current_page,
+          :per_page => @cards.per_page,
+          :total_entries => @cards.total_entries,
+          :entries => cards_to_json
+        }
+      end
     end
   end
 
-  def new
-    @card = Card.new
-  end
-
-  def edit
-    @card = Card.find_or_create(params[:code])
-  end
-
-  def create
-    @card = Card.create!(params[:card])
-    flash[:message] = "Card #{@card.code} successfully created"
-    redirect_to index_path
-  rescue Exception => e
-    @card = Card.new(params[:card])
-    flash[:error] = e.message
-    render new_card_path
+  private
+  def cards_to_json
+    @cards.map do |card|
+      card.attributes.merge(:levels => card.school_levels.map(&:attributes), :decks => card.card_decks.map(&:attributes))
+    end
   end
 end
