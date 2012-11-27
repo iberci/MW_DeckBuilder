@@ -130,7 +130,7 @@ end
   ['mw1a04', 'attack', 'Fireball', {fire:2}, 3, 8, 1],
   ['mw1a05', 'attack', 'Firestorm', {fire:3}, 2, 11, 0],
   ['mw1a06', 'attack', 'Flameblast', {fire:1}, 2, 5, 0],
-  ['mw1a07', 'attack', 'Lightning Bolt', {air:2}, 1, 8, 0], 
+  ['mw1a07', 'attack', 'Lightning Bolt', {air:2}, 3, 8, 1], 
   ['mw1a08', 'attack', 'Geyser', {water:1}, 2, 4, 0],
   ['mw1a09', 'attack', 'Jet Stream', {air:1}, 3, 4, 1],
   ['mw1a11', 'attack', 'Pillar of Light', {holy:1}, 3, 5, 1],
