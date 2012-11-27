@@ -1,5 +1,10 @@
 $().ready(function() {
- 
+
+   // GENERATED
+  var mageMap = {}
+  <% for mage in Mage.all %> mageMap['<%= mage.name %>'] = {}; <% end  %>
+  <% for ms in MageSchool.all %> mageMap['<%= ms.mage_name %>']['<%= ms.school_name %>'] = <%= ms.cost %>; <% end %>
+
   var buildParams = function() {
     return {
       for_type : _.map($("#for_type input:checked"), function(e) {
@@ -177,18 +182,6 @@ $().ready(function() {
      add : addListCard
   }
 
-  var getUrl = function() {
-     var pag = $('.pagination em.current')
-     return '/cards?page=' + (pag.length > 0 ? pag.text() : "1")
-  }
-
-  var query = _.throttle(function(href) {
-    $.ajax({
-      url: (href || getUrl()),
-      data: buildParams(),
-      dataType: 'script'
-    })
-  }, 1000)
 
   $('#dload_button_container button').click(_.throttle(function() {
      var file_type = $(this).data('dload') 
@@ -208,24 +201,62 @@ $().ready(function() {
      })
   }
 
-  // GENERATED
-  var mageMap = {}
-  <% for mage in Mage.all %> mageMap['<%= mage.name %>'] = {}; <% end  %>
-  <% for ms in MageSchool.all %> mageMap['<%= ms.mage_name %>']['<%= ms.school_name %>'] = <%= ms.cost %>; <% end %>
- 
+
+  var getUrl = function() {
+     var pag = $('.pagination em.current')
+     return '/cards?page=' + (pag.length > 0 ? pag.text() : "1")
+  }
 
   $('#mage_select').one('change', 'input', function() {
-    $('#for_type input, #for_school input').change(function() {
-      query()
+  
+    var dataTable = $("#card_list_table").dataTable({
+      bProcessing: true,
+      bServerSide: true,
+      sAjaxSource: '/cards',
+      sAjaxDataProp: 'entries',
+      sPaginationType: 'full_numbers',
+      aoColumnDefs: [{
+        aTargets:[0],
+        mData:'add',
+        bSort:false
+      }, {
+        aTargets:[1],
+        mData:'code'
+      }, {
+        aTargets:[2],
+        mData:'name' 
+      }, {
+        aTargets:[3],
+        mData:'cost'
+      },{ 
+        aTargets:[4],
+        mData:'deck_max'
+      }],
+      fnServerData: function(sSource, aoData, fnCallback, oSettings) {
+        oSettings.jqXHR = $.ajax({
+          dataType: 'json',
+          type: "get",
+          url: sSource,
+          data: $.extend(aoData, buildParams()),
+          success: function(data, textStatus, jqXHR) {
+
+            $('#tables_container').show()
+
+            $.each(data.entries, function(i, card) {
+              card.add = ''
+              updateCardCost(card)
+            })
+            fnCallback(data, textStatus, jqXHR)
+          }
+        })
+      }
     })
-    query()
+
     $('#filters_container').show()
+    $('#for_type input, #for_school input').change(function() {
+      dataTable.fnReloadAjax() 
+    })
   })
 
   $('#mage_select input').change(updateAllCards)
-
-  $('.pagination a').live('click', function() {
-     query($(this).attr("href"))
-     return false
-  })
 })
