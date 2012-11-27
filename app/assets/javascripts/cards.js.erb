@@ -208,13 +208,20 @@ $().ready(function() {
   }
 
   $('#mage_select').one('change', 'input', function() {
-  
+
+    var aoDataToMap = function(aoData) {
+      return _.reduce(aoData, function(memo, data) {
+        memo[data.name] = data.value
+        return memo
+      }, {})
+    }
+ 
     var dataTable = $("#card_list_table").dataTable({
+      bJQueryUI: true,
       bProcessing: true,
       bServerSide: true,
       sAjaxSource: '/cards',
-      sAjaxDataProp: 'entries',
-      sPaginationType: 'full_numbers',
+      sPaginationType: 'bootstrap',
       aoColumnDefs: [{
         aTargets:[0],
         mData:'add',
@@ -233,20 +240,32 @@ $().ready(function() {
         mData:'deck_max'
       }],
       fnServerData: function(sSource, aoData, fnCallback, oSettings) {
+        data = aoDataToMap(aoData)
         oSettings.jqXHR = $.ajax({
           dataType: 'json',
-          type: "get",
-          url: sSource,
-          data: $.extend(aoData, buildParams()),
-          success: function(data, textStatus, jqXHR) {
+          type: 'get',
+          url: '/cards',
+        data: _.extend({
+          echo : data['sEcho'],
+          per_page : data['iDisplayLength'],
+          page : (data['iDisplayStart']/data['iDisplayLength']) + 1
+        }, buildParams()),
+        success: function(data, textStatus, jqXHR) {
 
             $('#tables_container').show()
 
             $.each(data.entries, function(i, card) {
               card.add = ''
+              card.DT_RowId = 'list_' + card.code
+              card.DT_RowClass = ''
               updateCardCost(card)
             })
-            fnCallback(data, textStatus, jqXHR)
+            fnCallback({
+              iTotalRecords : data.total_entries,
+              iTotalDisplayRecords : _.min([data.total_entries, data.per_page]),
+              sEcho : data.echo,
+              aaData : data.entries
+            }, textStatus, jqXHR)
           }
         })
       }
@@ -254,7 +273,7 @@ $().ready(function() {
 
     $('#filters_container').show()
     $('#for_type input, #for_school input').change(function() {
-      dataTable.fnReloadAjax() 
+      dataTable.fnDraw() 
     })
   })
 

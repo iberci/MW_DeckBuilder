@@ -15,5 +15,6 @@
 //= require bootstrap
 //= require underscore-min
 //= require media/js/jquery.dataTables.min
+//= require datatables_pagination
 //= require_tree .
 //= require_self

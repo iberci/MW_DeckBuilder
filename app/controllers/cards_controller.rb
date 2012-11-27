@@ -16,7 +16,8 @@ class CardsController < ApplicationController
           :current_page => @cards.current_page,
           :per_page => @cards.per_page,
           :total_entries => @cards.total_entries,
-          :entries => cards_to_json
+          :entries => cards_to_json,
+          :echo => params[:echo]
         }
       end
     end
