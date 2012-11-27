@@ -11,5 +11,4 @@
  *= require bootstrap
  *= require_self
  *= require_tree .
- *= require media/css/jquery.dataTables
  */
