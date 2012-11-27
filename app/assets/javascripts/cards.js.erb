@@ -141,10 +141,13 @@ $().ready(function() {
     $('#card_list_table tbody tr[data-code=' + code  + '] button').removeAttr("disabled")
   }
 
-  var deckHasCard = function(code) {
-    return $('#deck_table tbody tr[data-code=' + code + ']').length > 0
+  var getDeckTr = function(code) {
+    return $('#deck_table tbody tr[data-code=' + code + ']')
   }
 
+  var deckHasCard = function(code) {
+    return getDeckTr(code).length > 0
+  }
 
   var addListCard = function(card) {
 
@@ -152,12 +155,16 @@ $().ready(function() {
     var tr = $('<tr/>').appendTo(tbody).data('card', card).attr('data-code', card.code) 
     var td = $('<td/>').appendTo(tr)
     var button = $("<button class='btn btn-small'/>").appendTo(td).click(function() {
-      addToDeck($(this).closest('tr').data('card'))
-      $(this).attr("disabled", "disabled")
+      var listCard = $(this).closest('tr').data('card')
+      if(deckHasCard(listCard.code)) {
+        var tr = getDeckTr(listCard.code)
+        var card = tr.data('card')
+        card.deck_amount = card.deck_amount + 1
+        updateDeckAmountTr(tr)
+      } else {
+        addToDeck(listCard)
+      }
     }).append('<i class="icon-arrow-left"/>')
-    if(deckHasCard(card.code)) {
-      button.attr("disabled", "disabled")
-    }
 
     $('<td/>').appendTo(tr).text(card.code)
     $('<td/>').appendTo(tr).text(card.name)
