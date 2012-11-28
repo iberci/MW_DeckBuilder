@@ -50,10 +50,11 @@ $().ready(function() {
     $('td.cost', tr).text(updateCardCost(card))
   }
 
-  var updateTotalDeckCost = function() {
-    var total = _.reduce($('#deck_table td.total'), function(memo, td) {
+  var updateTotalDeckCost = function(start) {
+    var total = (start || 0) + _.reduce($('#deck_table td.total'), function(memo, td) {
       return memo + parseInt($(td).text())
     },0)
+
     $("#total_deck_cost").text(total)
     return total
   }
@@ -149,11 +150,11 @@ $().ready(function() {
         return "<button class='btn btn-small'><i class='icon-trash'/></button>"
       }
     }],
-    fnCreatedRow : function(tr, aData, iDataIndex) {
-      var tr = $(tr).data('card', aData).attr('data-code', aData.code)
+    fnCreatedRow : function(tr, card, iDataIndex) {
+      var tr = $(tr).data('card', card).attr('data-code', card.code)
       updateDeckAmountTr(tr)
       updateDeckTr(tr)
-      updateTotalDeckCost()
+      updateTotalDeckCost(card.deck_cost)
     } 
   })
 
