@@ -157,8 +157,8 @@ $().ready(function() {
     } 
   })
 
-  $('deck_table').on('click', 'tbody tr button', function() {
-    deckTable.fnDeleteRow($(this).closest('tr'))
+  $('#deck_table tbody').on('click', 'tr button', function() {
+    deckTable.fnDeleteRow($(this).closest('tr').index())
     updateTotalDeckCost()
   })
 
