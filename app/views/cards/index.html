@@ -120,37 +120,31 @@
             <th>Cost</th>
             <th>Total</th>
             <th></th>
-            <tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-        <div class="span6">
-          <table id="card_list_table" class="table table-striped table-bordered">
-            <thead>
-              <tr>
-                <th></th>
-                <th>Code</th>
-                <th>Title</th>
-                <th>Cost</th>
-                <th>Max</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-            <tfoot>
-              <tr>
-                <td colspan="5">
-                  <div id="pagination_div_container"></div>
-                </td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-      </div>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
-    <div style="display:none;">
-      <%= form_tag decks_path, :method => 'get', id:'deck_dload_form' do |f| %>
-        <div id='input_fields'>
-        </div>
-      <% end %>
-    </div>   
+    <div class="span6">
+      <table id="card_list_table" class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Code</th>
+            <th>Title</th>
+            <th>Cost</th>
+            <th>Max</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div style="display:none;">
+  <%= form_tag decks_path, :method => 'get', id:'deck_dload_form' do |f| %>
+  <div id='input_fields'>
+  </div>
+  <% end %>
+</div>   

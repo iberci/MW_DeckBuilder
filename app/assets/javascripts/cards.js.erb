@@ -59,8 +59,8 @@ $().ready(function() {
   }
 
   var updateAllCards = function() {
-    _.each($('#deck_table tbody tr'), updateDeckTr)
-    _.each($('#card_list_table tbody tr'), updateListTr)
+    _.each($('#deck_table tbody tr[code]'), updateDeckTr)
+    _.each($('#card_list_table tbody tr[code]'), updateListTr)
     updateTotalDeckCost()
   }
 
@@ -118,33 +118,49 @@ $().ready(function() {
 
   $('select.deck_count').change(updateCardMaxes)
 
-  var addToDeck = function(card) {
+  var deckTable = $('#deck_table').dataTable({
+    bServerSide: false,
+    sPaginationType: 'bootstrap',
+    aoColumnDefs: [{
+      aTargets:[0],
+      mData:'code'
+    }, {
+      aTargets:[1],
+      mData:'name'
+    }, {
+      aTargets:[2],
+      mData: function() {
+        return "<select/>"
+      },
+      sClass:'amount',
+      bSortable:false
+    }, {
+      aTargets:[3],
+      mData: 'cost',
+      sClass: 'cost'
+    }, {
+      aTargets:[4],
+      mData: 'cost',
+      sClass: 'total',
+      bSortable:false
+    }, {
+      aTargets:[5],
+      mData: function() {
+        return "<button class='btn btn-small'><i class='icon-trash'/></button>"
+      }
+    }],
+    fnCreatedRow : function(tr, aData, iDataIndex) {
+      var tr = $(tr).data('card', aData).attr('data-code', aData.code)
+      updateDeckAmountTr(tr)
+      updateDeckTr(tr)
+      updateTotalDeckCost()
+    } 
+  })
 
-     var tbody = $('#deck_table tbody')
-     var tr = $('<tr/>').appendTo(tbody).data('card', card).attr('data-code', card.code)  
-     $('<td/>').text(card.code).appendTo(tr)
-     $('<td/>').text(card.name).appendTo(tr)
-
-     var td = $('<td/>').addClass("amount").appendTo(tr)
-     updateDeckAmountTr(tr)
-
-     $('<td/>').addClass("cost").appendTo(tr)
-     $('<td/>').addClass("total").appendTo(tr)
-     var td = $('<td/>').appendTo(tr)
-     $("<button class='btn btn-small'/>").appendTo(td).click(function() {
-       enableListCard(card.code)
-       $(this).closest('tr').remove()
-       updateTotalDeckCost()
-     }).append('<i class="icon-trash"/>')
-
-     updateDeckTr(tr)
-     updateTotalDeckCost()
-     $('#total_cost_container').show()
-  }
-
-  var enableListCard = function(code) {
-    $('#card_list_table tbody tr[data-code=' + code  + '] button').removeAttr("disabled")
-  }
+  $('deck_table').on('click', 'tbody tr button', function() {
+    deckTable.fnDeleteRow($(this).closest('tr'))
+    updateTotalDeckCost()
+  })
 
   var getDeckTr = function(code) {
     return $('#deck_table tbody tr[data-code=' + code + ']')
@@ -187,7 +203,7 @@ $().ready(function() {
       }, {})
     }
  
-    var dataTable = $("#card_list_table").dataTable({
+    var listTable = $("#card_list_table").dataTable({
       bJQueryUI: true,
       bProcessing: true,
       bServerSide: true,
@@ -231,9 +247,6 @@ $().ready(function() {
             $('#tables_container').show()
 
             $.each(data.entries, function(i, card) {
-              card.add = ''
-              card.DT_RowId = 'list_' + card.code
-              card.DT_RowClass = ''
               updateCardCost(card)
             })
             fnCallback({
@@ -254,21 +267,21 @@ $().ready(function() {
 
     $('#filters_container').show()
     $('#for_type input, #for_school input').change(function() {
-      dataTable.fnDraw() 
+      listTable.fnDraw() 
     })
   })
 
   $('#mage_select input').change(updateAllCards)
 
-    $('#card_list_table').on('click', 'tbody tr button', function() {
-      var listCard = $(this).closest('tr').data('card')
-      if(deckHasCard(listCard.code)) {
-        var tr = getDeckTr(listCard.code)
-        var card = tr.data('card')
-        card.deck_amount = card.deck_amount + 1
-        updateDeckAmountTr(tr)
-      } else {
-        addToDeck(listCard)
-      }
-    })
+  $('#card_list_table').on('click', 'tbody tr button', function() {
+    var listCard = $(this).closest('tr').data('card')
+    if(deckHasCard(listCard.code)) {
+      var tr = getDeckTr(listCard.code)
+      var card = tr.data('card')
+      card.deck_amount = card.deck_amount + 1
+      updateDeckAmountTr(tr)
+    } else {
+      deckTable.dataTable().fnAddData(listCard)
+    }
+  })
 })
