@@ -154,35 +154,6 @@ $().ready(function() {
     return getDeckTr(code).length > 0
   }
 
-  var addListCard = function(card) {
-
-    var tbody = $("#card_list_table tbody")
-    var tr = $('<tr/>').appendTo(tbody).data('card', card).attr('data-code', card.code) 
-    var td = $('<td/>').appendTo(tr)
-    var button = $("<button class='btn btn-small'/>").appendTo(td).click(function() {
-      var listCard = $(this).closest('tr').data('card')
-      if(deckHasCard(listCard.code)) {
-        var tr = getDeckTr(listCard.code)
-        var card = tr.data('card')
-        card.deck_amount = card.deck_amount + 1
-        updateDeckAmountTr(tr)
-      } else {
-        addToDeck(listCard)
-      }
-    }).append('<i class="icon-arrow-left"/>')
-
-    $('<td/>').appendTo(tr).text(card.code)
-    $('<td/>').appendTo(tr).text(card.name)
-    $('<td/>').addClass("cost").appendTo(tr).text(updateCardCost(card))
-    $('<td/>').addClass('max').appendTo(tr)
-    updateListCardMaxTr(tr)
-  }
-
-  window.cards = {
-     add : addListCard
-  }
-
-
   $('#dload_button_container button').click(_.throttle(function() {
      var file_type = $(this).data('dload') 
 
@@ -224,7 +195,10 @@ $().ready(function() {
       sPaginationType: 'bootstrap',
       aoColumnDefs: [{
         aTargets:[0],
-        mData:'add',
+        bSortable:false,
+        mData: function() {
+          return "<button class='btn btn-small'><i class='icon-arrow-left'/></button>"
+        },
         bSort:false
       }, {
         aTargets:[1],
@@ -234,23 +208,25 @@ $().ready(function() {
         mData:'name' 
       }, {
         aTargets:[3],
-        mData:'cost'
+        mData:'cost',
+        sClass:'cost'
       },{ 
         aTargets:[4],
-        mData:'deck_max'
+        mData:'deck_max',
+        sClass:'max'
       }],
       fnServerData: function(sSource, aoData, fnCallback, oSettings) {
         data = aoDataToMap(aoData)
         oSettings.jqXHR = $.ajax({
-          dataType: 'json',
-          type: 'get',
-          url: '/cards',
-        data: _.extend({
-          echo : data['sEcho'],
-          per_page : data['iDisplayLength'],
-          page : (data['iDisplayStart']/data['iDisplayLength']) + 1
-        }, buildParams()),
-        success: function(data, textStatus, jqXHR) {
+            dataType: 'json',
+            type: 'get',
+            url: '/cards',
+          data: _.extend({
+            echo : data['sEcho'],
+            per_page : data['iDisplayLength'],
+            page : (data['iDisplayStart']/data['iDisplayLength']) + 1
+          }, buildParams()),
+          success: function(data, textStatus, jqXHR) {
 
             $('#tables_container').show()
 
@@ -268,7 +244,12 @@ $().ready(function() {
             }, textStatus, jqXHR)
           }
         })
-      }
+      }, 
+      fnCreatedRow : function(tr, aData, iDataIndex) {
+        var tr = $(tr)
+        tr.data('card', aData).attr('data-code', aData.code)
+        updateListCardMaxTr(tr)
+      } 
     })
 
     $('#filters_container').show()
@@ -278,4 +259,16 @@ $().ready(function() {
   })
 
   $('#mage_select input').change(updateAllCards)
+
+    $('#card_list_table').on('click', 'tbody tr button', function() {
+      var listCard = $(this).closest('tr').data('card')
+      if(deckHasCard(listCard.code)) {
+        var tr = getDeckTr(listCard.code)
+        var card = tr.data('card')
+        card.deck_amount = card.deck_amount + 1
+        updateDeckAmountTr(tr)
+      } else {
+        addToDeck(listCard)
+      }
+    })
 })
