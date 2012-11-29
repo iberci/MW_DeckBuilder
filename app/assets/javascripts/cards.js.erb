@@ -124,31 +124,25 @@ $().ready(function() {
     sPaginationType: 'bootstrap',
     aoColumnDefs: [{
       aTargets:[0],
-      mData:'code'
+      mData: function(card) {
+        return "<button class='btn btn-small'><i class='icon-trash'></i></button>" + card.name
+      }
     }, {
       aTargets:[1],
-      mData:'name'
-    }, {
-      aTargets:[2],
       mData: function() {
         return "<select/>"
       },
       sClass:'amount',
       bSortable:false
     }, {
+      aTargets:[2],
+      mData: 'cost',
+      sClass: 'cost small'
+    }, {
       aTargets:[3],
       mData: 'cost',
-      sClass: 'cost'
-    }, {
-      aTargets:[4],
-      mData: 'cost',
-      sClass: 'total',
+      sClass: 'total small',
       bSortable:false
-    }, {
-      aTargets:[5],
-      mData: function() {
-        return "<button class='btn btn-small'><i class='icon-trash'/></button>"
-      }
     }],
     fnCreatedRow : function(tr, card, iDataIndex) {
       var tr = $(tr).data('card', card).attr('data-code', card.code)
@@ -212,26 +206,19 @@ $().ready(function() {
       sPaginationType: 'bootstrap',
       aoColumnDefs: [{
         aTargets:[0],
-        bSortable:false,
-        mData: function() {
-          return "<button class='btn btn-small'><i class='icon-arrow-left'/></button>"
+        mData: function(card) {
+          return "<button class='btn btn-small'><i class='icon-arrow-left'></i></button>" + card.name
         },
-        bSortable:false
+        bSortable:true 
       }, {
         aTargets:[1],
-        mData:'code'
-      }, {
-        aTargets:[2],
-        mData:'name' 
-      }, {
-        aTargets:[3],
         mData:'cost',
-        sClass:'cost',
+        sClass:'cost small',
         bSortable:false
       },{ 
-        aTargets:[4],
+        aTargets:[2],
         mData:'deck_max',
-        sClass:'max',
+        sClass:'max small',
         bSortable:false
       }],
       fnServerData: function(sSource, aoData, fnCallback, oSettings) {
@@ -290,5 +277,7 @@ $().ready(function() {
     } else {
       deckTable.dataTable().fnAddData(listCard)
     }
+    var cardHolder = $('#card_holder').empty()
+    $('<img></img>').attr('src', '/assets/' + listCard.code + '.jpg').appendTo(cardHolder) 
   })
 })

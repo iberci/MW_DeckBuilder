@@ -3,5 +3,17 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 select {
+  width:80p;
+}
+
+table select {
    width:50px;
+}
+
+table td {
+  font-size:12px;
+}
+
+.dataTables_filter {
+  display:none;
 }
