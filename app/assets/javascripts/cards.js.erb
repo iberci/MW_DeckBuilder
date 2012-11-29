@@ -216,7 +216,7 @@ $().ready(function() {
         mData: function() {
           return "<button class='btn btn-small'><i class='icon-arrow-left'/></button>"
         },
-        bSort:false
+        bSortable:false
       }, {
         aTargets:[1],
         mData:'code'
@@ -226,23 +226,29 @@ $().ready(function() {
       }, {
         aTargets:[3],
         mData:'cost',
-        sClass:'cost'
+        sClass:'cost',
+        bSortable:false
       },{ 
         aTargets:[4],
         mData:'deck_max',
-        sClass:'max'
+        sClass:'max',
+        bSortable:false
       }],
       fnServerData: function(sSource, aoData, fnCallback, oSettings) {
         data = aoDataToMap(aoData)
+        var order = (data.iSortCol_0 == 1 ? 'code ' : 'name ') + data.sSortDir_0
+
         oSettings.jqXHR = $.ajax({
             dataType: 'json',
             type: 'get',
             url: '/cards',
-          data: _.extend({
-            echo : data['sEcho'],
-            per_page : data['iDisplayLength'],
-            page : (data['iDisplayStart']/data['iDisplayLength']) + 1
-          }, buildParams()),
+            data: _.extend({
+              echo : data['sEcho'],
+              order : order,
+              search : data.sSearch,
+              per_page : data['iDisplayLength'],
+              page : (data['iDisplayStart']/data['iDisplayLength']) + 1
+            }, buildParams()),
           success: function(data, textStatus, jqXHR) {
 
             $('#tables_container').show()
