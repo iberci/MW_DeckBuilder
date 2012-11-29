@@ -3,7 +3,11 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 select {
-  width:80p;
+  width:80px;
+}
+
+#user_decks_container select {
+  width:50px;
 }
 
 table select {

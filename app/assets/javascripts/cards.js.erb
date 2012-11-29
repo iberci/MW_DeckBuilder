@@ -85,31 +85,33 @@ $().ready(function() {
   var updateDeckAmountTr = function(tr) {
     var tr = $(tr)
     var card = $(tr).data('card')
-    if(!card.deck_amount) {
-       card.deck_amount = 1
-    }
-    updateCardMax(card) 
+    if(card) {
+      if(!card.deck_amount) {
+         card.deck_amount = 1
+      }
+      updateCardMax(card) 
 
-    var max = _.min([card.deck_max, card.user_max])
-    card.deck_amount = _.min([max, card.deck_amount])
-    var td = $('td.amount', tr).empty()
-    if(max === 1) {
-      td.text('1') 
-    } else {
-       var select = $('<select/>').appendTo(td).change(function() {
-         card.deck_amount = parseInt($(this).val())
-         updateDeckTr(tr)
-         updateTotalDeckCost()
-       })
+      var max = _.min([card.deck_max, card.user_max])
+      card.deck_amount = _.min([max, card.deck_amount])
+      var td = $('td.amount', tr).empty()
+      if(max === 1) {
+        td.text('1') 
+      } else {
+         var select = $('<select/>').appendTo(td).change(function() {
+           card.deck_amount = parseInt($(this).val())
+           updateDeckTr(tr)
+           updateTotalDeckCost()
+         })
 
-       for(i = 1; i <= max; i++) {
-         var op = $('<option/>').val(i.toString()).text(i).appendTo(select)
-         if(i == card.deck_amount) {
-            op.attr('selected', 'selected')
+         for(i = 1; i <= max; i++) {
+           var op = $('<option/>').val(i.toString()).text(i).appendTo(select)
+           if(i == card.deck_amount) {
+              op.attr('selected', 'selected')
+           }
          }
-       }
+      }
+      updateDeckTr(tr)
     }
-    updateDeckTr(tr)
   }
 
   var updateCardMaxes = function() {
