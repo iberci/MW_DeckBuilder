@@ -290,7 +290,20 @@ $().ready(function() {
     return false
   })
 
+  var showMage = function(type) {
+    type = 'data-' + (type || 'card')
+    var path = '/assets/' + $("#mage_holder").attr(type)
+    $('<img></img>').attr('src', path).appendTo($('#mage_holder').empty()) 
+  } 
+
   $('#mage_select input').change(function() {
-    $('<img></img>').attr('src', '/assets/' + $(this).data('card')).appendTo($('#mage_holder').empty()) 
+    $('#mage_holder').attr('data-card',$(this).attr('data-card'))
+    $('#mage_holder').attr('data-ability',$(this).attr('data-ability'))
+    showMage()
+  })
+
+  $('#mage_profile_div a').click(function() {
+    showMage($(this).attr('data-tab'))
+    return false
   })
 })
