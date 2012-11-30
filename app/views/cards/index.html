@@ -4,7 +4,7 @@
   </div>
   <br/>
   <div class='row'>
-    <div class='span4'>
+    <div class='span3'>
       <div class='row'>
         <div class='well'>
           <div id="user_decks_container">
@@ -30,25 +30,25 @@
         <div class='well'>
           <div id="mage_select">
             <label class="radio">
-              <input type="radio" class="radio" name="mage" value="Wizard(Air)" />Wizard(Air)</label>
+              <input type="radio" class="radio" name="mage" value="Wizard(Air)" data-card='Wizard_outline.jpg' data-ability='Wizard_Ability_outline.jpg'/>Wizard(Air)</label>
             <label class="radio">
-              <input type="radio" class="radio" name="mage" value="Wizard(Water)" />Wizard(Water)</label>
+              <input type="radio" class="radio" name="mage" value="Wizard(Water)"  data-card='Wizard_outline.jpg' data-ability='Wizard_Ability_outline.jpg'/>Wizard(Water)</label>
             <label class="radio">
-              <input type="radio" class="radio" name="mage" value="Wizard(Earth)" />Wizard(Earth)</label>
+              <input type="radio" class="radio" name="mage" value="Wizard(Earth)"  data-card='Wizard_outline.jpg' data-ability='Wizard_Ability_outline.jpg'/>Wizard(Earth)</label>
             <label class="radio">
-              <input type="radio" class="radio" name="mage" value="Wizard(Fire)" />Wizard(Fire)</label>
+              <input type="radio" class="radio" name="mage" value="Wizard(Fire)"  data-card='Wizard_outline.jpg' data-ability='Wizard_Ability_outline.jpg'/>Wizard(Fire)</label>
             <label class="radio">
-              <input type="radio" class="radio" name="mage" value="Beastmaster" />Beastmaster</label>
+              <input type="radio" class="radio" name="mage" value="Beastmaster"  data-card='Beastmaster_outline.jpg' data-ability='Beastmaster_Ability_outline.jpg'/>Beastmaster</label>
             <label class="radio">
-              <input type="radio" class="radio" name="mage" value="Warlock" />Warlock</label>
+              <input type="radio" class="radio" name="mage" value="Warlock"  data-card='Warlock_outline.jpg' data-ability='Warlock_Ability_outline.jpg'/>Warlock</label>
             <label class="radio">
-              <input type="radio" class="radio" name="mage" value="Priestess" />Priestess</label>
+              <input type="radio" class="radio" name="mage" value="Priestess" data-card='Priestess_outline.jpg' data-ability='Priestess_Ability_outline.jpg'/>Priestess</label>
           </div>
         </div>
       </div>
       <div class='row'>
         <div class='well'>
-          <div id="dload_button_container" class="span4 btn-group">
+          <div id="dload_button_container" class="btn-group">
             <label for="download">
               <button data-dload="xml" class="btn btn-primary btn-small">XML</button>
               <button data-dload="csv" class="btn btn-primary btn-small">CSV</button>
@@ -59,7 +59,7 @@
       </div>
       <div class='row'>
         <div class='well'>
-          <div id="total_cost_container" class='span4'>
+          <div id="total_cost_container">
             <strong>
               <label for="total">Total Deck Cost:<span id="total_deck_cost">0</span>
               </label>
@@ -68,7 +68,11 @@
         </div>
       </div>
     </div>
-    <div class='span4 offset1'>
+    <div class='span4'>
+      <div id="mage_holder">
+      </div>
+    </div>
+    <div class='span4'>
       <div id="card_holder">
       </div>
     </div>
