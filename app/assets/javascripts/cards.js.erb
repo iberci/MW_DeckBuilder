@@ -209,7 +209,7 @@ $().ready(function() {
       aoColumnDefs: [{
         aTargets:[0],
         mData: function(card) {
-          return "<button class='btn btn-small'><i class='icon-arrow-left'></i></button>" + card.name
+          return "<button class='btn btn-small'><i class='icon-arrow-left'></i></button>&nbsp<a href='#'>" + card.name + "</a>"
         },
         bSortable:true 
       }, {
@@ -269,6 +269,10 @@ $().ready(function() {
 
   $('#mage_select input').change(updateAllCards)
 
+  var showCard = _.throttle(function(card) {
+    $('<img></img>').attr('src', '/assets/' + card.code + '.jpg').appendTo($('#card_holder').empty()) 
+  }, 1000)
+
   $('#card_list_table').on('click', 'tbody tr button', function() {
     var listCard = $(this).closest('tr').data('card')
     if(deckHasCard(listCard.code)) {
@@ -279,7 +283,10 @@ $().ready(function() {
     } else {
       deckTable.dataTable().fnAddData(listCard)
     }
-    var cardHolder = $('#card_holder').empty()
-    $('<img></img>').attr('src', '/assets/' + listCard.code + '.jpg').appendTo(cardHolder) 
+  })
+
+  $('#card_list_table').on('click', 'tbody tr a', function() {
+    showCard($(this).closest('tr').data('card'))
+    return false
   })
 })

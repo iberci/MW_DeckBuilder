@@ -23,89 +23,47 @@
         </label>
       </div>
     </div>
-    <div id="total_cost_container">
-      <div class="span2 offset1 well">
+    <div class="span2 offset1 well">
+      <div id="total_cost_container">
         <strong>
           <label for="total">Total Deck Cost:<span id="total_deck_cost">0</span>
           </label>
         </strong>
       </div>
-      <div id="dload_button_container" class="span3 well btn-group">
-        <label for="download">
-          <button data-dload="xml" class="btn btn-primary btn-small">XML</button>
-          <button data-dload="csv" class="btn btn-primary btn-small">CSV</button>
-          <button data-dload="pdf" class="btn btn-primary btn-small">PDF</button>
-        </label>
-      </div>
     </div>
   </div>
   <div class="row">
-    <div id="mage_select" class="span4">
-      <div class="well">
-        <label class="radio">
-          <input type="radio" class="radio" name="mage" value="Wizard(Air)" />Wizard(Air)</label>
-        <label class="radio">
-          <input type="radio" class="radio" name="mage" value="Wizard(Water)" />Wizard(Water)</label>
-        <label class="radio">
-          <input type="radio" class="radio" name="mage" value="Wizard(Earth)" />Wizard(Earth)</label>
-        <label class="radio">
-          <input type="radio" class="radio" name="mage" value="Wizard(Fire)" />Wizard(Fire)</label>
-        <label class="radio">
-          <input type="radio" class="radio" name="mage" value="Beastmaster" />Beastmaster</label>
-        <label class="radio">
-          <input type="radio" class="radio" name="mage" value="Warlock" />Warlock</label>
-        <label class="radio">
-          <input type="radio" class="radio" name="mage" value="Priestess" />Priestess</label>
+    <div class='span4'>
+      <div id="mage_select">
+        <div class="well">
+          <label class="radio">
+            <input type="radio" class="radio" name="mage" value="Wizard(Air)" />Wizard(Air)</label>
+          <label class="radio">
+            <input type="radio" class="radio" name="mage" value="Wizard(Water)" />Wizard(Water)</label>
+          <label class="radio">
+            <input type="radio" class="radio" name="mage" value="Wizard(Earth)" />Wizard(Earth)</label>
+          <label class="radio">
+            <input type="radio" class="radio" name="mage" value="Wizard(Fire)" />Wizard(Fire)</label>
+          <label class="radio">
+            <input type="radio" class="radio" name="mage" value="Beastmaster" />Beastmaster</label>
+          <label class="radio">
+            <input type="radio" class="radio" name="mage" value="Warlock" />Warlock</label>
+          <label class="radio">
+            <input type="radio" class="radio" name="mage" value="Priestess" />Priestess</label>
+        </div>
+      </div>
+     <div class='row'>
+        <div id="dload_button_container" class="span3 well btn-group">
+          <label for="download">
+            <button data-dload="xml" class="btn btn-primary btn-small">XML</button>
+            <button data-dload="csv" class="btn btn-primary btn-small">CSV</button>
+            <button data-dload="pdf" class="btn btn-primary btn-small">PDF</button>
+          </label>
+        </div>
       </div>
     </div>
-    <div id="filters_container" class="span7 offset1" style="display:none;">
-      <div id="for_type">
-        <div class="span2">
-          <ul class="unstyled">
-            <li>
-            <input type="checkbox" name="attack" value="Attack" />Attacks</li>
-            <li>
-            <input type="checkbox" name="creature" value="Creature" />Creatures</li>
-            <li>
-            <input type="checkbox" name="conjuration" value="Conjuration" />Conjurations</li>
-            <li>
-            <input type="checkbox" name="enchantment" value="Enchantment" />Enchantments</li>
-            <li>
-            <input type="checkbox" name="equipment" value="Equipment" />Equipment</li>
-            <li>
-            <input type="checkbox" name="incantation" value="Incantation" />Incantations</li>
-          </ul>
-        </div>
-      </div>
-      <div id="for_school">
-        <div class="span2">
-          <ul class="unstyled">
-            <li>
-            <input type="checkbox" name="air" value="Air" />Air</li>
-            <li>
-            <input type="checkbox" name="arcane" value="Arcane" />Arcane</li>
-            <li>
-            <input type="checkbox" name="dark" value="Dark" />Dark</li>
-            <li>
-            <input type="checkbox" name="earth" value="Earth" />Earth</li>
-            <li>
-            <input type="checkbox" name="fire" value="Fire" />Fire</li>
-          </ul>
-        </div>
-        <div class="span2">
-          <ul class="unstyled">
-            <li>
-            <input type="checkbox" name="holy" value="Holy" />Holy</li>
-            <li>
-            <input type="checkbox" name="mind" value="Mind" />Mind</li>
-            <li>
-            <input type="checkbox" name="nature" value="Nature" />Nature</li>
-            <li>
-            <input type="checkbox" name="war" value="War" />War</li>
-            <li>
-            <input type="checkbox" name="water" value="Water" />Water</li>
-          </ul>
-        </div>
+    <div class="span4 offset1">
+      <div id="card_holder">
       </div>
     </div>
   </div>
@@ -123,11 +81,7 @@
         <tbody></tbody>
       </table>
     </div>
-    <div class="span4">
-      <div id="card_holder">
-      </div>
-    </div>
-    <div class="span4">
+     <div class="span4">
       <table id="card_list_table">
         <thead>
           <tr>
@@ -139,6 +93,48 @@
         <tbody>
         </tbody>
       </table>
+    </div>
+    <div id="filters_container" class="span4" style="display:none;">
+      <div id="for_type">
+          <ul class="unstyled">
+            <li>
+            <input type="checkbox" name="attack" value="Attack" />Attacks</li>
+            <li>
+            <input type="checkbox" name="creature" value="Creature" />Creatures</li>
+            <li>
+            <input type="checkbox" name="conjuration" value="Conjuration" />Conjurations</li>
+            <li>
+            <input type="checkbox" name="enchantment" value="Enchantment" />Enchantments</li>
+            <li>
+            <input type="checkbox" name="equipment" value="Equipment" />Equipment</li>
+            <li>
+            <input type="checkbox" name="incantation" value="Incantation" />Incantations</li>
+          </ul>
+      </div>
+      <div id="for_school">
+        <ul class="unstyled">
+          <li>
+          <input type="checkbox" name="air" value="Air" />Air</li>
+          <li>
+          <input type="checkbox" name="arcane" value="Arcane" />Arcane</li>
+          <li>
+          <input type="checkbox" name="dark" value="Dark" />Dark</li>
+          <li>
+          <input type="checkbox" name="earth" value="Earth" />Earth</li>
+          <li>
+          <input type="checkbox" name="fire" value="Fire" />Fire</li>
+          <li>
+          <input type="checkbox" name="holy" value="Holy" />Holy</li>
+          <li>
+          <input type="checkbox" name="mind" value="Mind" />Mind</li>
+          <li>
+          <input type="checkbox" name="nature" value="Nature" />Nature</li>
+          <li>
+          <input type="checkbox" name="war" value="War" />War</li>
+          <li>
+          <input type="checkbox" name="water" value="Water" />Water</li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>
