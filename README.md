@@ -3,4 +3,6 @@ MW_DeckBuilder
 
 MW Deck Builder
 
-Test
+== License
+
+Mage Wars Deck Builder  is released under the {MIT License}[http://www.opensource.org/licenses/MIT].
