@@ -11,8 +11,11 @@ class Card < ActiveRecord::Base
   has_many :traits, :through => :trait_levels
   belongs_to :type, :foreign_key => :type_name
 
-  has_many :card_decks, :foreign_key => 'card_code'
-  has_many :decks, :through => 'card_decks'
+  has_many :pack_cards, :foreign_key => :card_code
+  has_many :packs, :through => :pack_cards
+
+  has_many :deck_cards, :foreign_key => :card_code
+  has_many :decks, :through => :deck_cards
 
   scope :for_schools, ->(*s) {
     joins(:schools).where("schools.name in (?)", s.flatten.reject(&:blank?).map{|sc| sc.to_s.capitalize})

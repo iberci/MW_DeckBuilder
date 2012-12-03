@@ -31,8 +31,8 @@ $().ready(function() {
 
   var getUserDeckMaxes = function() {
      return {
-       Core: parseInt($('#user_decks_container select[data-deck=Core]').val()),
-       Tome: parseInt($('#user_decks_container select[data-deck=Tome]').val())
+       Core: parseInt($('#packs_container select[data-pack=Core]').val()),
+       Tome: parseInt($('#packs_container select[data-pack=Tome]').val())
      }
      
   }
@@ -67,8 +67,8 @@ $().ready(function() {
 
   var updateCardMax = function(card) {
      userDeckMaxes = getUserDeckMaxes() 
-     return (card.user_max = _.reduce(card.decks, function(memo, deck) {
-        return memo + deck.amount * userDeckMaxes[deck.deck_name]
+     return (card.user_max = _.reduce(card.packs, function(memo, pack) {
+        return memo + pack.amount * userDeckMaxes[pack.pack_name]
      },0))
   }
 
@@ -167,22 +167,26 @@ $().ready(function() {
     return getDeckTr(code).length > 0
   }
 
-  $('#dload_button_container button').click(_.throttle(function() {
-     var file_type = $(this).data('dload') 
+  $('#dload_button_container button:not(#upload_btn)').click(_.throttle(function() {
+    var file_type = $(this).data('dload') 
 
-     var form = $('#deck_dload_form')
+    $('#input_fields').empty().append(buildCards()).append($('<input type="hidden"/>').attr("name", 'type').val(file_type))
 
-     $('#input_fields').empty().append(buildCards()).append($('<input type="hidden"/>').attr("name", 'type').val(file_type))
-     form.submit()
-     return false
+    $('#deck_dload_div').modal()
+    
+
+    return false
   }, 2000))
 
   var buildCards = function() {
-     return _.map($('#deck_table tbody tr'), function(tr) {
+     return _.flatten(_.map($('#deck_table tbody tr'), function(tr, i) {
        var card = $(tr).data('card')
-       var name = 'cards[' + card.code + ']' 
-       return $('<input type="hidden"/>').attr('name', name).val(card.deck_amount)
-     })
+       var base = 'deck[deck_cards_attributes][]'
+       return [
+         $('<input type="hidden"/>').attr('name', base + '[card_code]').attr('value', card.code),
+         $('<input type="hidden"/>').attr('name', base + '[amount]').attr('value', card.deck_amount)
+       ]
+     }))
   }
 
 
@@ -305,5 +309,13 @@ $().ready(function() {
   $('#mage_profile_div a').click(function() {
     showMage($(this).attr('data-tab'))
     return false
+  })
+
+  $('#upload_btn').click(function() {
+    $('#file_upload_div').show().modal()
+  })
+
+  $('#deck_dload_div input[type=submit]').submit(function() {
+    $('#deck_deload_div').modal('hide')
   })
 })

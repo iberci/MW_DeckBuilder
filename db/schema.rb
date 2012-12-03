@@ -13,12 +13,6 @@
 
 ActiveRecord::Schema.define(:version => 20121116020858) do
 
-  create_table "card_decks", :id => false, :force => true do |t|
-    t.string  "deck_name",                :null => false
-    t.string  "card_code",                :null => false
-    t.integer "amount",    :default => 1, :null => false
-  end
-
   create_table "card_traits", :id => false, :force => true do |t|
     t.string  "card_code",                 :null => false
     t.string  "trait_name",                :null => false
@@ -36,8 +30,15 @@ ActiveRecord::Schema.define(:version => 20121116020858) do
     t.integer "deck_max",    :default => 4,     :null => false
   end
 
-  create_table "decks", :id => false, :force => true do |t|
-    t.string "name", :null => false
+  create_table "deck_cards", :id => false, :force => true do |t|
+    t.integer "deck_id",                  :null => false
+    t.string  "card_code",                :null => false
+    t.integer "amount",    :default => 1, :null => false
+  end
+
+  create_table "decks", :force => true do |t|
+    t.string "title"
+    t.string "description"
   end
 
   create_table "mage_schools", :id => false, :force => true do |t|
@@ -47,6 +48,16 @@ ActiveRecord::Schema.define(:version => 20121116020858) do
   end
 
   create_table "mages", :id => false, :force => true do |t|
+    t.string "name", :null => false
+  end
+
+  create_table "pack_cards", :id => false, :force => true do |t|
+    t.string  "pack_name",                :null => false
+    t.string  "card_code",                :null => false
+    t.integer "amount",    :default => 1, :null => false
+  end
+
+  create_table "packs", :id => false, :force => true do |t|
     t.string "name", :null => false
   end
 

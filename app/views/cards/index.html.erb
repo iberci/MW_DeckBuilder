@@ -7,15 +7,14 @@
     <div class='span3'>
       <div class='row'>
         <div class='well'>
-          <div id="user_decks_container">
+          <div id="packs_container">
             <label for="decks">Core:
-              <select class="deck_count" data-deck="Core">
+              <select data-pack="Core">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
-              </select>&nbsp;&nbsp;Tome:
-              <select class="deck_count" data-deck="Tome">
+              </select>&nbsp;&nbsp;Tome:<select data-pack="Tome">
                 <option value="0">0</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -53,6 +52,7 @@
               <button data-dload="xml" class="btn btn-primary btn-small">XML</button>
               <button data-dload="csv" class="btn btn-primary btn-small">CSV</button>
               <button data-dload="pdf" class="btn btn-primary btn-small">PDF</button>
+              <button id="upload_btn" class="btn btn-primary btn-small">Upload</button>
             </label>
           </div>
         </div>
@@ -158,10 +158,34 @@
       </div>
     </div>
   </div>
+  <div id="file_upload_div" class="modal hide fade">
+    <%= form_tag decks_path, :method => "post", :remote => true, :multipart => true do |f| %>
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class='modal-body'>
+          <%= file_field_tag :file %>
+      </div>
+      <div class='modal-footer'>
+          <%= submit_tag :Upload %>
+      </div>
+    <% end %>
+  </div>  
+  <div id='deck_dload_div' class="modal hide fade">
+    <%= form_tag new_deck_path, :method => 'get' do |f| %>
+      <div class="modal-header">
+        <label for='title'><strong></strong>Create Deck</label>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class='modal-body'>
+        <label for="title">Title:<%= text_field_tag 'deck[title]' %></label>       
+        <label for="description">Description:<%= text_area_tag 'deck[description]' %></label>       
+        <div id='input_fields'>
+        </div>
+      </div>
+      <div class='modal-footer'>
+        <%= submit_tag :Create %>
+      </div>
+    <% end %>
+  </div>   
 </div>
-<div style="display:none;">
-  <%= form_tag decks_path, :method => 'get', id:'deck_dload_form' do |f| %>
-  <div id='input_fields'>
-  </div>
-  <% end %>
-</div>   

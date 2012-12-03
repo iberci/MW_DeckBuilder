@@ -9,7 +9,7 @@
 
 
 
-[Deck, TraitLevel, SchoolLevel, MageSchool, School, Mage, Card, Trait, Type].each {|k| k.send(:destroy_all)}
+[Pack, TraitLevel, SchoolLevel, MageSchool, School, Mage, Card, Trait, Type].each {|k| k.send(:destroy_all)}
 
 creature, enchantment, conjuration, incantation, attack, equipment = *Type.create([
   {name:'Creature'},
@@ -92,8 +92,8 @@ end
   warlock.mage_schools.create!(school:school, cost:cost)
 end
 
-core = Deck.create(:name => 'Core')
-tome = Deck.create(:name => 'Tome')
+core = Pack.create(:name => 'Core')
+tome = Pack.create(:name => 'Tome')
 
 ###################### Cards ###################################
 
@@ -110,9 +110,9 @@ def  create_card(code, type, name, schools, core_num, cast_cost = nil, tome_num 
 
   c = Card.create(attributes)
 
-  c.card_decks.create(amount:core_num, deck_name:'Core')
+  c.pack_cards.create(amount:core_num, pack_name:'Core')
   if(tome_num && tome_num > 0)
-    c.card_decks.create(amount:tome_num, deck_name:'Tome')
+    c.pack_cards.create(amount:tome_num, pack_name:'Tome')
   end
 
   schools.each do |school, level|

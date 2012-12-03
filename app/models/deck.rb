@@ -1,9 +1,64 @@
 class Deck < ActiveRecord::Base
-  attr_accessible :name
+  %w{builder csv prawn nokogiri}.each {|f| require f}
 
-  self.primary_key = 'name'
+  attr_accessible :title, :description, :deck_cards, :deck_cards_attributes
 
-  has_many :card_decks, :foreign_key => 'deck_name'
-  has_many :cards, :through => :card_decks
+  has_many :deck_cards
+  has_many :cards, :through => :deck_cards
 
+  accepts_nested_attributes_for :deck_cards 
+
+  class << self
+
+   def build_from_xml(file)
+
+     deck = Nokogiri::XML::Document.parse(file.read()).root
+
+     Deck.new({
+       :title => deck.attributes['title'].value, 
+       :description => deck.css('description').text,
+       :deck_cards_attributes => deck.css('cards card').map do |c|
+         ca = c.attributes
+         {:card => Card.find(ca['code'].value), :amount => ca['amount'].value}
+       end
+     })
+   end
+
+   def build_from_csv(file)
+   end
+
+  end
+
+  def write_xml(f)
+    builder = ::Builder::XmlMarkup.new(target:f, indent:2)
+    builder.instruct!
+    builder.deck :title => self.title do |deck| 
+      deck.description self.description
+      deck.cards do |cards|
+        for dc in self.deck_cards
+          cards.card :code => dc.card.code, :name => dc.card.name, :amount => dc.amount
+        end
+      end
+    end
+  end
+
+  def write_csv(f)
+    CSV.open(f.path, "wb") do |csv|
+      csv << [self.title,  self.description]
+      for dc in self.deck_cards
+        csv << [dc.card.code, dc.amount, dc.card.name]
+      end
+    end
+  end
+
+  def write_pdf(f)
+    pdf = Prawn::Document.new
+    pdf.text deck.title
+    pdf.text deck.description
+    for dc in deck.deck_cards
+      pdf.text "#{dc.card.code}, #{dc.amount}, #{dc.card.name}"
+    end
+    pdf.render_file(f.path)
+  end
+  
 end

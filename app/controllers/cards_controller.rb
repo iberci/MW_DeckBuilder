@@ -2,7 +2,7 @@ class CardsController < ApplicationController
 
   DEFAULT_PER_PAGE = 10
   def index
-    @cards = Card.order(params[:order] || 'name').includes(:school_levels).includes(:card_decks)
+    @cards = Card.order(params[:order] || 'name').includes(:school_levels).includes(:pack_cards)
     @cards = @cards.send(:for_school, params[:for_school]) if params[:for_school]
     @cards = @cards.send(:for_type, params[:for_type]) if params[:for_type]
 
@@ -30,7 +30,7 @@ class CardsController < ApplicationController
   private
   def cards_to_json
     @cards.map do |card|
-      card.attributes.merge(:levels => card.school_levels.map(&:attributes), :decks => card.card_decks.map(&:attributes))
+      card.attributes.merge(:levels => card.school_levels.map(&:attributes), :packs => card.pack_cards.map(&:attributes))
     end
   end
 end
