@@ -205,8 +205,6 @@ $().ready(function() {
     }
  
     var listTable = $("#card_list_table").dataTable({
-      bJQueryUI: true,
-      bProcessing: true,
       bServerSide: true,
       sAjaxSource: '/cards',
       sPaginationType: 'bootstrap',
@@ -218,11 +216,15 @@ $().ready(function() {
         bSortable:true 
       }, {
         aTargets:[1],
+        mData:'type_name',
+        sClass: 'small'
+      }, {
+        aTargets:[2],
         mData:'cost',
         sClass:'cost small',
         bSortable:false
       },{ 
-        aTargets:[2],
+        aTargets:[3],
         mData:'deck_max',
         sClass:'max small',
         bSortable:false
