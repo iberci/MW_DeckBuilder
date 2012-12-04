@@ -6,7 +6,8 @@ gem 'pg'
 gem 'activerecord-postgresql-adapter'
 
 if RUBY_PLATFORM.include? 'linux'
-  gem 'therubyracer'
+  gem 'libv8'
+  gem 'therubyracer', '0.10.2'
 end
 gem 'multi_json'
 
