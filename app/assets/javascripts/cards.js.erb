@@ -312,11 +312,7 @@ $().ready(function() {
   })
 
   $('#upload_btn').click(function() {
-    $('#file_upload_div').show().modal()
-  })
-
-  $('#deck_dload_div input[type=submit]').submit(function() {
-    $('#deck_deload_div').modal('hide')
+    $('#file_upload_div').modal()
   })
 
   if(window.deck) {
@@ -330,4 +326,8 @@ $().ready(function() {
       deckTable.dataTable().fnAddData(card)    
     })
   }
+
+  $('#dload_form').submit(function() {
+    $('#deck_dload_div').modal('hide')
+  })
 })
