@@ -34,7 +34,7 @@ class Deck < ActiveRecord::Base
   def write_xml(f)
     builder = ::Builder::XmlMarkup.new(target:f, indent:2)
     builder.instruct!
-    builder.deck :title => self.title, :mage => self.mage_name  do |deck| 
+    builder.deck :title => self.title, :mage => self.mage_name, :version => '1'  do |deck| 
       deck.description self.description
       deck.cards do |cards|
         for dc in self.deck_cards
