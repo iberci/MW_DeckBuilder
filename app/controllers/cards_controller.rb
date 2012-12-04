@@ -1,4 +1,5 @@
 class CardsController < ApplicationController
+  include CardsHelper
 
   DEFAULT_PER_PAGE = 10
   def index
@@ -20,17 +21,11 @@ class CardsController < ApplicationController
           :current_page => @cards.current_page,
           :per_page => @cards.per_page,
           :total_entries => @cards.total_entries,
-          :entries => cards_to_json,
+          :entries => flatten_cards(@cards),
           :echo => params[:echo]
         }
       end
     end
   end
 
-  private
-  def cards_to_json
-    @cards.map do |card|
-      card.attributes.merge(:levels => card.school_levels.map(&:attributes), :packs => card.pack_cards.map(&:attributes))
-    end
-  end
 end

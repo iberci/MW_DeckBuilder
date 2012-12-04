@@ -159,7 +159,7 @@
     </div>
   </div>
   <div id="file_upload_div" class="modal hide fade">
-    <%= form_tag decks_path, :method => "post", :remote => true, :multipart => true do |f| %>
+    <%= form_tag decks_path, :method => "post",  :multipart => true do |f| %>
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
       </div>
@@ -178,6 +178,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
       </div>
       <div class='modal-body'>
+        <%= hidden_field_tag 'deck[mage_name]' %>
         <label for="title">Title:<%= text_field_tag 'deck[title]' %></label>       
         <label for="description">Description:<%= text_area_tag 'deck[description]' %></label>       
         <div id='input_fields'>
@@ -189,3 +190,8 @@
     <% end %>
   </div>   
 </div>
+<script>
+  <% if @deck %>
+    window.deck = <%= raw flatten_deck(@deck).to_json %> 
+  <% end %>
+</script>

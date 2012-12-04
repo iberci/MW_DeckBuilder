@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(:version => 20121116020858) do
   create_table "decks", :force => true do |t|
     t.string "title"
     t.string "description"
+    t.string "mage_name",   :null => false
   end
 
   create_table "mage_schools", :id => false, :force => true do |t|

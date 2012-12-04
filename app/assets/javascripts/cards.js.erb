@@ -170,6 +170,7 @@ $().ready(function() {
   $('#dload_button_container button:not(#upload_btn)').click(_.throttle(function() {
     var file_type = $(this).data('dload') 
 
+    $('#deck_mage_name').val(mage())
     $('#input_fields').empty().append(buildCards()).append($('<input type="hidden"/>').attr("name", 'type').val(file_type))
 
     $('#deck_dload_div').modal()
@@ -188,7 +189,6 @@ $().ready(function() {
        ]
      }))
   }
-
 
   var getUrl = function() {
      var pag = $('.pagination em.current')
@@ -318,4 +318,16 @@ $().ready(function() {
   $('#deck_dload_div input[type=submit]').submit(function() {
     $('#deck_deload_div').modal('hide')
   })
+
+  if(window.deck) {
+     $("#mage_select input[value='" + deck.mage_name + "']").attr('checked', 'checked').change()
+    $("#deck_mage_name").val(deck.mage_name)
+    $("#deck_title").val(deck.title)
+    $("#deck_description").val(deck.description)
+    _.each(window.deck.deck_cards, function(deck_card) {
+      var card = $.extend({deck_amount : deck_card.amount}, deck_card.card )
+      updateCardCost(card)
+      deckTable.dataTable().fnAddData(card)    
+    })
+  }
 })

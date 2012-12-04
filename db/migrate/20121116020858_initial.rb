@@ -102,7 +102,9 @@ pk('types', 'name')
   create_table 'decks' do |t|
     t.string :title
     t.string :description
+    t.string :mage_name, :null => false
   end
+  fk('decks', 'mage_name', 'mages', 'name')
 
   create_table 'deck_cards', :id => false do |t|
     t.integer :deck_id, :null => false

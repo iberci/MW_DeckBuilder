@@ -18,6 +18,8 @@ class DecksController < ApplicationController
     file = params[:file]
     ext = File.extname(file.original_filename)[1..-1]
     @deck = Deck.send("build_from_#{ext}", file)
+
+    render 'cards/index'
   end
 
   private 
