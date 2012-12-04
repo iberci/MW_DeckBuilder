@@ -127,7 +127,7 @@ $().ready(function() {
     aoColumnDefs: [{
       aTargets:[0],
       mData: function(card) {
-        return "<button class='btn btn-small'><i class='icon-trash'></i></button>" + card.name
+        return "<button class='btn btn-small'><i class='icon-trash'></i></button><a class='card_href' href='#'>" + card.name + "<a>"
       }
     }, {
       aTargets:[1],
@@ -213,7 +213,7 @@ $().ready(function() {
       aoColumnDefs: [{
         aTargets:[0],
         mData: function(card) {
-          return "<button class='btn btn-small'><i class='icon-arrow-left'></i></button>&nbsp<a href='#'>" + card.name + "</a>"
+          return "<button class='btn btn-small'><i class='icon-arrow-left'></i></button>&nbsp<a class='card_href' href='#'>" + card.name + "</a>"
         },
         bSortable:true 
       }, {
@@ -289,7 +289,7 @@ $().ready(function() {
     }
   })
 
-  $('#card_list_table').on('click', 'tbody tr a', function() {
+  $('#card_list_table, #deck_table').on('click', 'tbody tr a.card_href', function() {
     showCard($(this).closest('tr').data('card'))
     return false
   })
