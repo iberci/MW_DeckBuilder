@@ -1,7 +1,11 @@
 class DecksController < ApplicationController
-   %w{tempfile csv prawn nokogiri}.each {|f| require f}
+   require 'tempfile'
 
   def new
+
+  end
+
+  def update
     params[:deck][:deck_cards_attributes] = params[:da] if params[:da]
     type = params['type']
 

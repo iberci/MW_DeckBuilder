@@ -173,7 +173,7 @@
     <% end %>
   </div>  
   <div id='deck_dload_div' class="modal hide fade" role='dialog'>
-    <%= form_tag new_deck_path, :method => 'get', :id =>'dload_form' do |f| %>
+    <%= form_tag deck_path(1), :method => 'put', :id =>'dload_form' do |f| %>
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
       </div>
