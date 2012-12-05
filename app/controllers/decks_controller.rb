@@ -2,6 +2,7 @@ class DecksController < ApplicationController
    %w{tempfile csv prawn nokogiri}.each {|f| require f}
 
   def new
+    params[:deck][:deck_cards_attributes] = params[:da] if params[:da]
     type = params['type']
 
     file = Tempfile.open('Deck', Rails.root.join('tmp')) do |f|
