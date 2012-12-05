@@ -2,11 +2,9 @@ class DecksController < ApplicationController
    require 'tempfile'
 
   def new
-
   end
 
   def update
-    params[:deck][:deck_cards_attributes] = params[:da] if params[:da]
     type = params['type']
 
     file = Tempfile.open('Deck', Rails.root.join('tmp')) do |f|

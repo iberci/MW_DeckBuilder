@@ -182,7 +182,7 @@ $().ready(function() {
   var buildCards = function() {
      return _.flatten(_.map($('#deck_table tbody tr'), function(tr, i) {
        var card = $(tr).data('card')
-       var base = 'da[]'
+       var base = 'deck[deck_cards_attributes][]'
        return [
          $('<input type="hidden"/>').attr('name', base + '[card_code]').attr('value', card.code),
          $('<input type="hidden"/>').attr('name', base + '[amount]').attr('value', card.deck_amount)
