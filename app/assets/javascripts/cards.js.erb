@@ -132,17 +132,21 @@ $().ready(function() {
       }
     }, {
       aTargets:[1],
+      mData: 'type_name',
+      sClass: 'small'
+    }, {
+      aTargets:[2],
       mData: function() {
         return "<select/>"
       },
       sClass:'amount',
       bSortable:false
     }, {
-      aTargets:[2],
+      aTargets:[3],
       mData: 'cost',
       sClass: 'cost small'
     }, {
-      aTargets:[3],
+      aTargets:[4],
       mData: 'cost',
       sClass: 'total small',
       bSortable:false
