@@ -123,7 +123,8 @@ $().ready(function() {
 
   var deckTable = $('#deck_table').dataTable({
     bServerSide: false,
-    sPaginationType: 'bootstrap',
+    bLengthChange: false,
+    iDisplayLength: 100,
     aoColumnDefs: [{
       aTargets:[0],
       mData: function(card) {
