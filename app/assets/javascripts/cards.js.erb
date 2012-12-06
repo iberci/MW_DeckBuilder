@@ -132,7 +132,7 @@ $().ready(function() {
       }
     }, {
       aTargets:[1],
-      mData: 'type_name',
+      mData: function(card) {return card.type_name.substring(0,4)},
       sClass: 'small'
     }, {
       aTargets:[2],
@@ -221,7 +221,7 @@ $().ready(function() {
         bSortable:true 
       }, {
         aTargets:[1],
-        mData:'type_name',
+        mData: function(card) {return card.type_name.substring(0,4)},
         sClass: 'small'
       }, {
         aTargets:[2],
