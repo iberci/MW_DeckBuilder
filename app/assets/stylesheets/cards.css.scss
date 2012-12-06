@@ -2,6 +2,10 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+#header_div {
+  background:url(header.jpg) top center no-repeat transparent;
+}
+
 select {
   width:80px;
 }
