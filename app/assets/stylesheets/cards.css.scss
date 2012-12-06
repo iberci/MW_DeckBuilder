@@ -27,5 +27,21 @@ table td {
 }
 
 #filters_container {
-  padding-top:60px
+  padding-top:20px
 }
+
+#deck_table_paginate, #deck_table_info {
+  display:none;
+}
+
+#card_list_table_wrapper {
+  li.prev {
+    display:none;
+  }
+
+  li.next {
+    display:none;
+  }
+}
+
+
