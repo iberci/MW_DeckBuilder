@@ -20,15 +20,6 @@ $().ready(function() {
      return $('input[name="mage"]:checked').val()
   }
 
-  var updateCardCost = function(card) {
-     var costMap = mageMap[mage()]
-     var costs =  _.map(card.levels, function(level_detail) {
-        return level_detail.level * (card.novice ? 1 : costMap[level_detail.school_name])
-     })
-
-     return (card.cost = (card.or_cost) ?  _.min(costs) : _.reduce(costs, function(memo, cost) { return memo + cost }, 0)) 
-  }
-
   var getUserDeckMaxes = function() {
      return {
        Core: parseInt($('#packs_container select[data-pack=Core]').val()),
@@ -39,15 +30,16 @@ $().ready(function() {
 
   var updateDeckTr = function(tr) {
     var tr = $(tr)
-    var card = $(tr).data('card')
-    $('td.cost', tr).text(card.cost = updateCardCost(card)) 
-    $('td.total', tr).text(card.deck_cost = card.deck_amount * card.cost) 
+    var card_entry = deck.get(tr.data('code'))
+    var cost = card_entry.card.cost()
+    $('td.cost', tr).text(cost) 
+    $('td.total', tr).text(card_entry.amount * cost) 
   }
 
   var updateListTr = function(tr) {
     var tr = $(tr)
     var card = $(tr).data('card')
-    $('td.cost', tr).text(updateCardCost(card))
+    $('td.cost', tr).text(card.cost())
   }
 
   var updateTotalDeckCost = function(start) {
@@ -65,53 +57,43 @@ $().ready(function() {
     updateTotalDeckCost()
   }
 
-  var updateCardMax = function(card) {
-     userDeckMaxes = getUserDeckMaxes() 
-     return (card.user_max = _.reduce(card.packs, function(memo, pack) {
-        return memo + pack.amount * userDeckMaxes[pack.pack_name]
-     },0))
-  }
-
   var updateListCardMaxTr = function(tr) {
     var tr = $(tr)
     var card = $(tr).data('card')
-    updateCardMax(card) 
         
-    var maxText = (card.user_max < card.deck_max) ? "" + card.user_max + "/" + card.deck_max : card.deck_max
+    var user_max = card.user_max()
+    var maxText = '' + user_max
+    if(user_max != card.deck_max) {
+      maxText += '/' + card.deck_max
+    }
 
     $('td.max', tr).text(maxText)
   }
 
   var updateDeckAmountTr = function(tr) {
     var tr = $(tr)
-    var card = $(tr).data('card')
-    if(card) {
-      if(!card.deck_amount) {
-         card.deck_amount = 1
-      }
-      updateCardMax(card) 
+    var card_entry = deck.get(tr.data('code'))
+    var max = card_entry.card.user_max()
 
-      var max = _.min([card.deck_max, card.user_max])
-      card.deck_amount = _.min([max, card.deck_amount])
-      var td = $('td.amount', tr).empty()
-      if(max === 1) {
-        td.text('1') 
-      } else {
-         var select = $('<select/>').appendTo(td).change(function() {
-           card.deck_amount = parseInt($(this).val())
-           updateDeckTr(tr)
-           updateTotalDeckCost()
-         })
+    var td = $('td.amount', tr).empty()
+    if(max === 1) {
+      td.text('1') 
+    } else {
+       var select = $('<select/>').appendTo(td).change(function() {
+         var card_entry = deck.get(tr.data('code'))
+         card_entry.amount = parseInt($(this).val())
+         updateDeckTr(tr)
+         updateTotalDeckCost()
+       })
 
-         for(i = 1; i <= max; i++) {
-           var op = $('<option/>').val(i.toString()).text(i).appendTo(select)
-           if(i == card.deck_amount) {
-              op.attr('selected', 'selected')
-           }
+       for(i = 1; i <= max; i++) {
+         var op = $('<option/>').val(i.toString()).text(i).appendTo(select)
+         if(i == card_entry.amount) {
+            op.attr('selected', 'selected')
          }
-      }
-      updateDeckTr(tr)
+       }
     }
+    updateDeckTr(tr)
   }
 
   var updateCardMaxes = function() {
@@ -200,6 +182,40 @@ $().ready(function() {
      return '/cards?page=' + (pag.length > 0 ? pag.text() : "1")
   }
 
+  var costMap = function() {
+    return mageMap[mage()]
+  }
+
+  var deck = {
+    entries : {},
+    get : function(code) {
+      return this.entries[code]
+    },
+    add : function(card) {
+      var card_entry = this.entries[card.code]
+      if(!card_entry) {
+        card_entry = this.entries[card.code] = {card : $.extend({}, card), count : 0}
+      } 
+      card_entry.count += 1
+      return card_entry
+    },
+    remove : function(code) {
+      var card_entry = this.entries[code]
+      if(card_entry) {
+        card_entry.deck_mount -= 1
+        if(card_entry.deck_amount <= 0) {
+          delete this.entries[code]
+        }
+      }
+    },
+    cost : function() {
+      return  _.reduce(this.entries, function(memo, card_entry) {
+        return memo + card_entry.count * card_entry.card.cost()
+      }, 0)
+    }
+  }
+
+
   $('#mage_select').one('change', 'input', function() {
 
     var aoDataToMap = function(aoData) {
@@ -208,7 +224,26 @@ $().ready(function() {
         return memo
       }, {})
     }
- 
+
+    var extendCard = function(card) {
+      return $.extend({
+        cost : function() {
+          var cm = costMap()
+          var costs =  _.map(card.levels, function(level_detail) {
+            return level_detail.level * (card.novice ? 1 : cm[level_detail.school_name])
+          })
+
+          return (card.or_cost) ?  _.min(costs) : _.reduce(costs, function(memo, cost) { return memo + cost }, 0) 
+        },
+        user_max : function() {
+          var userDeckMaxes = getUserDeckMaxes() 
+          return _.min([card.deck_max, _.reduce(card.packs, function(memo, pack) {
+            return memo + pack.amount * userDeckMaxes[pack.pack_name]
+          }, 0)])
+        }
+      }, card)
+    }
+
     var listTable = $("#card_list_table").dataTable({
       bServerSide: true,
       sAjaxSource: '/cards',
@@ -226,7 +261,7 @@ $().ready(function() {
         sClass: 'small'
       }, {
         aTargets:[2],
-        mData:'cost',
+        mData: function(card) { return card.cost()},
         sClass:'cost small',
         bSortable:false
       },{ 
@@ -254,21 +289,18 @@ $().ready(function() {
 
             $('#tables_container').show()
 
-            $.each(data.entries, function(i, card) {
-              updateCardCost(card)
-            })
             fnCallback({
               iTotalRecords : data.total_entries,
               iTotalDisplayRecords : _.min([data.total_entries, data.per_page]),
               sEcho : data.echo,
-              aaData : data.entries
+              aaData : _.map(data.entries, extendCard)
             }, textStatus, jqXHR)
           }
         })
       }, 
-      fnCreatedRow : function(tr, aData, iDataIndex) {
+      fnCreatedRow : function(tr, card, iDataIndex) {
         var tr = $(tr)
-        tr.data('card', aData).attr('data-code', aData.code)
+        tr.data('card', card).attr('data-code', card.code)
         updateListCardMaxTr(tr)
       } 
     })
@@ -286,11 +318,11 @@ $().ready(function() {
   }, 1000)
 
   $('#card_list_table').on('click', 'tbody tr button', function() {
-    var listCard = $(this).closest('tr').data('card')
-    if(deckHasCard(listCard.code)) {
-      var tr = getDeckTr(listCard.code)
-      var card = tr.data('card')
-      card.deck_amount = card.deck_amount + 1
+    var tr = $(this).closest('tr')
+    var listCard = tr.data('card')
+    var card_entry = deck.add(listCard)
+    var tr = getDeckTr(listCard.code)
+    if(tr.length > 0) {
       updateDeckAmountTr(tr)
     } else {
       deckTable.dataTable().fnAddData(listCard)
@@ -330,7 +362,6 @@ $().ready(function() {
     $("#deck_description").val(deck.description)
     _.each(window.deck.deck_cards, function(deck_card) {
       var card = $.extend({deck_amount : deck_card.amount}, deck_card.card )
-      updateCardCost(card)
       deckTable.dataTable().fnAddData(card)    
     })
   }
