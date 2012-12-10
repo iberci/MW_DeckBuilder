@@ -190,7 +190,7 @@ end
   ['mw1i06', 'incantation', 'Dispel', {arcane:1}, 5, nil, 1],
   ['mw1i07', 'incantation', 'Dissolve', {water:1}, 5, nil, 1],
   ['mw1i08', 'incantation', 'Drain Life', {dark:3}, 2, 12, 1],
-  ['mw1i09', 'incantation', 'Drain Power', {dark:3}, 2, 16, 1],
+  ['mw1i09', 'incantation', 'Drain Power', {arcane:3}, 2, 16, 1],
   ['mw1i10', 'incantation', 'Evade', {war:1}, 2, 3, 1],
   ['mw1i11', 'incantation', 'Explode', {fire:2}, 2, 0, 1],
   ['mw1i12', 'incantation', 'Force Push', {mind:1}, 3, 3, 2],
