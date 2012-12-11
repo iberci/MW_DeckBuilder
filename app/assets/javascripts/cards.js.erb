@@ -5,6 +5,39 @@ $().ready(function() {
   <% for mage in Mage.all %> mageMap['<%= mage.name %>'] = {}; <% end  %>
   <% for ms in MageSchool.all %> mageMap['<%= ms.mage_name %>']['<%= ms.school_name %>'] = <%= ms.cost %>; <% end %>
 
+  var costMap = function() {
+    return mageMap[mage()]
+  } 
+
+  var deck = {
+    _entries : {},
+    get : function(code) {
+      return this._entries[code]
+    },
+    add : function(card) {
+      var card_entry = this._entries[card.code]
+      if(!card_entry) {
+        card_entry = this._entries[card.code] = {card : $.extend({}, card), amount : 0}
+      } 
+      card_entry.amount += 1
+      return card_entry
+    },
+    remove : function(code) {
+      delete this._entries[code]
+    },
+    cost : function() {
+      return  _.reduce(this._entries, function(memo, card_entry) {
+        return memo + card_entry.amount * card_entry.card.cost()
+      }, 0)
+    },
+    codes : function() {
+      return _.keys(this._entries)
+    },
+    entries : function() {
+      return _.values(this._entries)
+    }
+  }
+ 
   var buildParams = function() {
     return {
       for_type : _.map($("#for_type input:checked"), function(e) {
@@ -14,6 +47,13 @@ $().ready(function() {
         return $(e).val()
       })
     }
+  }
+
+  var aoDataToMap = function(aoData) {
+    return _.reduce(aoData, function(memo, data) {
+      memo[data.name] = data.value
+      return memo
+    }, {})
   }
 
   var mage = function() {
@@ -40,7 +80,7 @@ $().ready(function() {
        var select = $('<select/>').appendTo(td).change(function() {
          var card_entry = deck.get(tr.data('code'))
          card_entry.amount = parseInt($(this).val())
-         updateDeckTr(tr)
+         deckTable.dataTable().fnDraw()
          updateTotalDeckCost()
        })
 
@@ -89,17 +129,15 @@ $().ready(function() {
 
 
   var deckTable = $('#deck_table').dataTable({
-    bServerSide: false,
-    bLengthChange: false,
-    iDisplayLength: 100,
+    bServerSide: true,
     aoColumnDefs: [{
       aTargets:[0],
-      mData: function(card) {
-        return "<button class='btn btn-small'><i class='icon-trash'></i></button><a class='card_href' href='#'>" + card.name + "<a>"
+      mData: function(entry) {
+        return "<button class='btn btn-small'><i class='icon-trash'></i></button><a class='card_href' href='#'>" + entry.card.name + "<a>"
       }
     }, {
       aTargets:[1],
-      mData: function(card) {return card.type_name.substring(0,4)},
+      mData: function(entry) {return entry.card.type_name.substring(0,4)},
       sClass: 'small'
     }, {
       aTargets:[2],
@@ -110,16 +148,24 @@ $().ready(function() {
       bSortable:false
     }, {
       aTargets:[3],
-      mData: 'cost',
+      mData: function(entry) {return entry.card.cost()},
       sClass: 'cost small'
     }, {
       aTargets:[4],
-      mData: 'cost',
+      mData: function(entry) { return entry.card.cost() * entry.amount },
       sClass: 'total small',
       bSortable:false
     }],
-    fnCreatedRow : function(tr, card, iDataIndex) {
-      $(tr).attr('data-code', card.code)
+    fnServerData: function(sSource, aoData, fnCallback, oSettings) {
+      var data = aoDataToMap(aoData)
+      fnCallback({
+        sEcho : data.sEcho,
+        iTotalRecords : deck.codes().length,
+        aaData : deck.entries(),
+      })
+    },
+    fnCreatedRow : function(tr, entry, iDataIndex) {
+      updateDeckTr($(tr).attr('data-code', entry.card.code))
     } 
   })
 
@@ -161,41 +207,7 @@ $().ready(function() {
      return '/cards?page=' + (pag.length > 0 ? pag.text() : "1")
   }
 
-  var deck = {
-    entries : {},
-    get : function(code) {
-      return this.entries[code]
-    },
-    add : function(card) {
-      var card_entry = this.entries[card.code]
-      if(!card_entry) {
-        card_entry = this.entries[card.code] = {card : $.extend({}, card), amount : 0}
-      } 
-      card_entry.amount += 1
-      return card_entry
-    },
-    remove : function(code) {
-      delete this.entries[code]
-    },
-    cost : function() {
-      return  _.reduce(this.entries, function(memo, card_entry) {
-        return memo + card_entry.amount * card_entry.card.cost()
-      }, 0)
-    }
-  }
- 
-  var costMap = function() {
-    return mageMap[mage()]
-  } 
-
   $('#mage_select').one('change', 'input', function() {
-
-    var aoDataToMap = function(aoData) {
-      return _.reduce(aoData, function(memo, data) {
-        memo[data.name] = data.value
-        return memo
-      }, {})
-    }
 
     var extendCard = function(card) {
       return $.extend({
@@ -243,7 +255,7 @@ $().ready(function() {
         bSortable:false
       }],
       fnServerData: function(sSource, aoData, fnCallback, oSettings) {
-        data = aoDataToMap(aoData)
+        var data = aoDataToMap(aoData)
         var order = (data.iSortCol_0 == 1 ? 'code ' : 'name ') + data.sSortDir_0
 
         oSettings.jqXHR = $.ajax({
@@ -295,14 +307,8 @@ $().ready(function() {
 
   $('#card_list_table').on('click', 'tbody tr button', function() {
     var listTr = $(this).closest('tr')
-    var listCard = listTr.data('card')
-    var card_entry = deck.add(listCard)
-    var deckTr = getDeckTr(listCard.code)
-    if(deckTr.length == 0) {
-      deckTable.dataTable().fnAddData(listCard)
-      deckTr = getDeckTr(listCard.code)
-    }
-    updateDeckTr(deckTr)
+    deck.add(listTr.data('card'))
+    deckTable.dataTable().fnDraw()
     updateTotalDeckCost()
   })
 
