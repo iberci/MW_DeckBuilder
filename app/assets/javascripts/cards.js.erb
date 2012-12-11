@@ -58,20 +58,10 @@ $().ready(function() {
     $('td.total', tr).text(card_entry.amount * cost) 
   }
 
-  var updateListTr = function(tr) {
+  var updateListCardCostTr = function(tr) {
     var tr = $(tr)
     var card = $(tr).data('card')
     $('td.cost', tr).text(card.cost())
-  }
-
-  var updateTotalDeckCost = function(start) {
-    $("#total_deck_cost").text(deck.cost())
-  }
-
-  var updateAll = function() {
-    _.each($('#deck_table tbody tr[data-code]'), updateDeckTr)
-    _.each($('#card_list_table tbody tr[data-code]'), updateListTr)
-    updateTotalDeckCost()
   }
 
   var updateListCardMaxTr = function(tr) {
@@ -86,6 +76,17 @@ $().ready(function() {
 
     $('td.max', tr).text(maxText)
   }
+
+  var updateTotalDeckCost = function(start) {
+    $("#total_deck_cost").text(deck.cost())
+  }
+
+  var updateAll = function() {
+    _.each($('#deck_table tbody tr[data-code]'), updateDeckTr)
+    _.each($('#card_list_table tbody tr[data-code]'), updateListCardCostTr)
+    updateTotalDeckCost()
+  }
+
 
   var deckTable = $('#deck_table').dataTable({
     bServerSide: false,
@@ -133,10 +134,6 @@ $().ready(function() {
     return $('#deck_table tbody tr[data-code=' + code + ']')
   }
 
-  var deckHasCard = function(code) {
-    return getDeckTr(code).length > 0
-  }
-
   $('#dload_button_container button:not(#upload_btn)').click(_.throttle(function() {
     var file_type = $(this).data('dload') 
 
@@ -164,10 +161,6 @@ $().ready(function() {
      return '/cards?page=' + (pag.length > 0 ? pag.text() : "1")
   }
 
-  var costMap = function() {
-    return mageMap[mage()]
-  }
-
   var deck = {
     entries : {},
     get : function(code) {
@@ -190,6 +183,10 @@ $().ready(function() {
       }, 0)
     }
   }
+ 
+  var costMap = function() {
+    return mageMap[mage()]
+  } 
 
   $('#mage_select').one('change', 'input', function() {
 
@@ -283,6 +280,10 @@ $().ready(function() {
     $('#filters_container, #mage_profile_div').show()
     $('#for_type input, #for_school input').change(function() {
       listTable.fnDraw() 
+    })
+
+    $('#packs_container select').change(function() {
+      _.each($('#card_list_table tbody tr[data-code]'), updateListCardMaxTr)
     })
   })
 
