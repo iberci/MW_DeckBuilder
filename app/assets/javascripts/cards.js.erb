@@ -190,10 +190,6 @@ $().ready(function() {
     updateTotalDeckCost()
   })
 
-  var getDeckTr = function(code) {
-    return $('#deck_table tbody tr[data-code=' + code + ']')
-  }
-
   $('#dload_button_container button:not(#upload_btn)').click(_.throttle(function() {
     var file_type = $(this).data('dload') 
 
@@ -315,10 +311,6 @@ $().ready(function() {
 
   $('#mage_select input').change(updateAll)
 
-  var showCard = _.throttle(function(card) {
-    $('<img></img>').attr('src', '/assets/' + card.code + '.jpg').appendTo($('#card_holder').empty()) 
-  }, 1000)
-
   $('#card_list_table').on('click', 'tbody tr button', function() {
     var listTr = $(this).closest('tr')
     deck.add(listTr.data('card'))
@@ -326,8 +318,12 @@ $().ready(function() {
     updateTotalDeckCost()
   })
 
+  var showCard = _.throttle(function(code) {
+    $('<img></img>').attr('src', '/assets/' + code + '.jpg').appendTo($('#card_holder').empty()) 
+  }, 1000)
+
   $('#card_list_table, #deck_table').on('click', 'tbody tr a.card_href', function() {
-    showCard($(this).closest('tr').data('card'))
+    showCard($(this).closest('tr').data('code'))
     return false
   })
 
