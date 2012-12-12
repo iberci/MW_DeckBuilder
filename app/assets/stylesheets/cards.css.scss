@@ -22,26 +22,14 @@ table td {
   font-size:12px;
 }
 
-.dataTables_filter {
-  display:none;
-}
-
 #filters_container {
-  padding-top:20px
+  padding-top:60px;
 }
 
-#deck_table_paginate, #deck_table_info {
-  display:none;
+#total_cost_container span {
+  border:1px solid #ccc;
+  color:#555; 
+  border-radius:4px;
+  height:30px;
+  width:200px;
 }
-
-#card_list_table_wrapper {
-  li.prev {
-    display:none;
-  }
-
-  li.next {
-    display:none;
-  }
-}
-
-

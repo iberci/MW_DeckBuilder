@@ -10,31 +10,32 @@ $().ready(function() {
   } 
 
   var deck = {
-    _entries : {},
+    entries : {},
     get : function(code) {
-      return this._entries[code]
+      return this.entries[code]
     },
     add : function(card) {
-      var card_entry = this._entries[card.code]
+      var card_entry = this.entries[card.code]
       if(!card_entry) {
-        card_entry = this._entries[card.code] = {card : $.extend({}, card), amount : 0}
+        card_entry = this.entries[card.code] = {card : $.extend({}, card), amount : 0}
       } 
-      card_entry.amount += 1
+      card_entry.amount = _.min([card_entry.amount + 1, card_entry.card.user_max()])
       return card_entry
     },
     remove : function(code) {
-      delete this._entries[code]
+      delete this.entries[code]
     },
     cost : function() {
-      return  _.reduce(this._entries, function(memo, card_entry) {
+      return  _.reduce(this.entries, function(memo, card_entry) {
         return memo + card_entry.amount * card_entry.card.cost()
       }, 0)
     },
     codes : function() {
-      return _.keys(this._entries)
+      return _.keys(this.entries)
     },
-    entries : function() {
-      return _.values(this._entries)
+    sort : function(field, descending) {
+      var collection =  _.sortBy(this.entries, function(entry) {return entry.card[field]}) 
+      return descending ? collection.reverse() : collection 
     }
   }
  
@@ -130,6 +131,8 @@ $().ready(function() {
 
   var deckTable = $('#deck_table').dataTable({
     bServerSide: true,
+    sPaginationType: 'full_numbers',
+    sDom: 'tpil',
     aoColumnDefs: [{
       aTargets:[0],
       mData: function(entry) {
@@ -145,23 +148,34 @@ $().ready(function() {
         return "<select/>"
       },
       sClass:'amount',
-      bSortable:false
+      bSortable: false
     }, {
       aTargets:[3],
       mData: function(entry) {return entry.card.cost()},
-      sClass: 'cost small'
+      sClass: 'cost small',
+      bSortable: false
     }, {
       aTargets:[4],
       mData: function(entry) { return entry.card.cost() * entry.amount },
       sClass: 'total small',
-      bSortable:false
+      bSortable: false
     }],
     fnServerData: function(sSource, aoData, fnCallback, oSettings) {
       var data = aoDataToMap(aoData)
+      switch (data.iSortCol_0) {
+        case 0: var sort = 'name'; break
+        case 1: var sort = 'type_name'; break
+      }
+
+      var results = _.first(_.rest(deck.sort(sort, data.sSortDir_0 === 'desc'), data.iDisplayStart), data.iDisplayLength) 
+      var length = deck.codes().length
+     
+
       fnCallback({
         sEcho : data.sEcho,
-        iTotalRecords : deck.codes().length,
-        aaData : deck.entries(),
+        iTotalRecords : length,
+        iTotalDisplayRecords : length,
+        aaData : results
       })
     },
     fnCreatedRow : function(tr, entry, iDataIndex) {
@@ -193,7 +207,7 @@ $().ready(function() {
   }, 2000))
 
   var buildCards = function() {
-     return _.flatten(_.map(deck.entries, function(card_entry, i) {
+     return _.flatten(_.map(deck.sort("name"), function(card_entry, i) {
        var base = 'deck[deck_cards_attributes][]'
        return [
          $('<input type="hidden"/>').attr('name', base + '[card_code]').attr('value', card_entry.card.code),
@@ -231,8 +245,8 @@ $().ready(function() {
     var listTable = $("#card_list_table").dataTable({
       bServerSide: true,
       sAjaxSource: '/cards',
-      sPaginationType: 'bootstrap',
-      sDom:'tip',
+      sPaginationType: 'full_numbers',
+      sDom: 'ftpil',
       aoColumnDefs: [{
         aTargets:[0],
         mData: function(card) {
@@ -274,8 +288,8 @@ $().ready(function() {
             $('#tables_container').show()
 
             fnCallback({
-              iTotalRecords : data.total_entries,
-              iTotalDisplayRecords : _.min([data.total_entries, data.per_page]),
+              iTotalRecords : <%= Card.count %>,
+              iTotalDisplayRecords : data.total_entries,
               sEcho : data.echo,
               aaData : _.map(data.entries, extendCard)
             }, textStatus, jqXHR)
@@ -286,7 +300,7 @@ $().ready(function() {
         var tr = $(tr)
         tr.data('card', card).attr('data-code', card.code)
         updateListCardMaxTr(tr)
-      } 
+      }
     })
 
     $('#filters_container, #mage_profile_div').show()
