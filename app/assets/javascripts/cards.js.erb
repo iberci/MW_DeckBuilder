@@ -132,7 +132,7 @@ $().ready(function() {
   var deckTable = $('#deck_table').dataTable({
     bServerSide: true,
     sPaginationType: 'full_numbers',
-    sDom: 'tpil',
+    sDom: 'ptil',
     aoColumnDefs: [{
       aTargets:[0],
       mData: function(entry) {
@@ -246,7 +246,7 @@ $().ready(function() {
       bServerSide: true,
       sAjaxSource: '/cards',
       sPaginationType: 'full_numbers',
-      sDom: 'ftpil',
+      sDom: 'fptil',
       aoColumnDefs: [{
         aTargets:[0],
         mData: function(card) {
