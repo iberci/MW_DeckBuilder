@@ -19,7 +19,7 @@ $().ready(function() {
       if(!card_entry) {
         card_entry = this.entries[card.code] = {card : $.extend({}, card), amount : 0}
       } 
-      card_entry.amount = _.min([card_entry.amount + 1, card_entry.card.user_max()])
+      card_entry.amount = card.amount || _.min([card_entry.amount + 1, card_entry.card.user_max()])
       return card_entry
     },
     remove : function(code) {
@@ -217,26 +217,26 @@ $().ready(function() {
      return '/cards?page=' + (pag.length > 0 ? pag.text() : "1")
   }
 
+  var extendCard = function(card) {
+    return $.extend({
+      cost : function() {
+        var cm = costMap()
+        var costs =  _.map(card.levels, function(level_detail) {
+          return level_detail.level * (card.novice ? 1 : cm[level_detail.school_name])
+        })
+
+        return (card.or_cost) ?  _.min(costs) : _.reduce(costs, function(memo, cost) { return memo + cost }, 0) 
+      },
+      user_max : function() {
+        var userDeckMaxes = getUserDeckMaxes() 
+        return _.min([card.deck_max, _.reduce(card.packs, function(memo, pack) {
+          return memo + pack.amount * userDeckMaxes[pack.pack_name]
+        }, 0)])
+      }
+    }, card)
+  }
+
   $('#mage_select').one('change', 'input', function() {
-
-    var extendCard = function(card) {
-      return $.extend({
-        cost : function() {
-          var cm = costMap()
-          var costs =  _.map(card.levels, function(level_detail) {
-            return level_detail.level * (card.novice ? 1 : cm[level_detail.school_name])
-          })
-
-          return (card.or_cost) ?  _.min(costs) : _.reduce(costs, function(memo, cost) { return memo + cost }, 0) 
-        },
-        user_max : function() {
-          var userDeckMaxes = getUserDeckMaxes() 
-          return _.min([card.deck_max, _.reduce(card.packs, function(memo, pack) {
-            return memo + pack.amount * userDeckMaxes[pack.pack_name]
-          }, 0)])
-        }
-      }, card)
-    }
 
     var listTable = $("#card_list_table").dataTable({
       bServerSide: true,
@@ -348,15 +348,15 @@ $().ready(function() {
     $('#file_upload_div').modal()
   })
 
-  if(window.deck) {
-     $("#mage_select input[value='" + deck.mage_name + "']").attr('checked', 'checked').change()
-    $("#deck_mage_name").val(deck.mage_name)
-    $("#deck_title").val(deck.title)
-    $("#deck_description").val(deck.description)
-    _.each(window.deck.deck_cards, function(deck_card) {
-      var card = $.extend({deck_amount : deck_card.amount}, deck_card.card )
-      deckTable.dataTable().fnAddData(card)    
+  if(wDeck = window.deck) {
+    $("#mage_select input[value='" + wDeck.mage_name + "']").attr('checked', 'checked').change()
+    $("#deck_mage_name").val(wDeck.mage_name)
+    $("#deck_title").val(wDeck.title)
+    $("#deck_description").val(wDeck.description)
+    _.each(wDeck.deck_cards, function(wDeckCard) {
+      deck.add(extendCard(wDeckCard.card))
     })
+    deckTable.dataTable().fnDraw()
   }
 
   $('#dload_form').submit(function() {
