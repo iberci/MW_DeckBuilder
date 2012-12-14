@@ -5,6 +5,15 @@ gem 'rails', '3.2.6'
 gem 'pg'
 gem 'activerecord-postgresql-adapter'
 
+gem 'debugger'
+
+gem "rspec-rails", :group => [:test, :development]
+group :test do
+  gem "factory_girl_rails"
+  gem "capybara"
+  gem "guard-rspec"
+end
+
 if RUBY_PLATFORM.include? 'linux'
   gem 'libv8'
   gem 'therubyracer', '0.10.2'
