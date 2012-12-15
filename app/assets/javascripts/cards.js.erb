@@ -36,6 +36,14 @@ $().ready(function() {
     sort : function(field, descending) {
       var collection =  _.sortBy(this.entries, function(entry) {return entry.card[field]}) 
       return descending ? collection.reverse() : collection 
+    },
+    stats : function() {
+      return _.reduce(this.entries, 
+        function(memo, entry) {
+          memo[entry.card.type_name] += entry.amount
+          return memo
+        }, { Conjuration : 0, Creature: 0, Equipment: 0, Incantation: 0, Attack: 0, Enchantment: 0}
+      )
     }
   }
  
@@ -82,7 +90,7 @@ $().ready(function() {
          var card_entry = deck.get(tr.data('code'))
          card_entry.amount = parseInt($(this).val())
          deckTable.dataTable().fnDraw()
-         updateTotalDeckCost()
+         updateCosts()
        })
 
        for(i = 1; i <= max; i++) {
@@ -118,14 +126,17 @@ $().ready(function() {
     $('td.max', tr).text(maxText)
   }
 
-  var updateTotalDeckCost = function(start) {
+  var updateCosts = function(start) {
+    _.each(deck.stats(), function(a, c) {
+      $('#total_cost_container span.' + c).text(a)
+    })
     $("#total_deck_cost").text(deck.cost())
   }
 
   var updateAll = function() {
     _.each($('#deck_table tbody tr[data-code]'), updateDeckTr)
     _.each($('#card_list_table tbody tr[data-code]'), updateListCardCostTr)
-    updateTotalDeckCost()
+    updateCosts()
   }
 
 
@@ -141,7 +152,7 @@ $().ready(function() {
     }, {
       aTargets:[1],
       mData: function(entry) {return entry.card.type_name.substring(0,4)},
-      sClass: 'small'
+      sClass: 'small type'
     }, {
       aTargets:[2],
       mData: function() {
@@ -179,7 +190,7 @@ $().ready(function() {
       })
     },
     fnCreatedRow : function(tr, entry, iDataIndex) {
-      updateDeckTr($(tr).attr('data-code', entry.card.code))
+      updateDeckTr($(tr).attr('data-code', entry.card.code).addClass(entry.card.type_name))
     } 
   })
 
@@ -187,7 +198,7 @@ $().ready(function() {
     var tr = $(this).closest('tr')
     deck.remove(tr.data('code'))
     deckTable.fnDeleteRow(tr[0])
-    updateTotalDeckCost()
+    updateCosts()
   })
 
   $('#dload_button_container button:not(#upload_btn)').click(_.throttle(function() {
@@ -252,7 +263,7 @@ $().ready(function() {
       }, {
         aTargets:[1],
         mData: function(card) {return card.type_name.substring(0,4)},
-        sClass: 'small'
+        sClass: 'small type'
       }, {
         aTargets:[2],
         mData: function(card) { return card.cost()},
@@ -294,7 +305,7 @@ $().ready(function() {
       }, 
       fnCreatedRow : function(tr, card, iDataIndex) {
         var tr = $(tr)
-        tr.data('card', card).attr('data-code', card.code)
+        tr.data('card', card).attr('data-code', card.code).addClass(card.type_name)
         updateListCardMaxTr(tr)
       }
     })
@@ -315,7 +326,7 @@ $().ready(function() {
     var listTr = $(this).closest('tr')
     deck.add(listTr.data('card'))
     deckTable.dataTable().fnDraw()
-    updateTotalDeckCost()
+    updateCosts()
   })
 
   var showCard = _.throttle(function(code) {

@@ -37,3 +37,33 @@ table td {
 #deck_table tbody tr td.amount select {
  margin-bottom:1px;
 }
+
+#deck_table, #card_list_table, #total_cost_container {
+  tr.Attack td.type, span.Attack {
+    background:#F58760;
+  }
+
+  tr.Creature td.type, span.Creature {
+    background:#734A2E;
+    color:white;
+  }
+
+  tr.Enchantment td.type, span.Enchantment {
+    background:#D47127;
+  }
+
+  tr.Conjuration td.type, span.Conjuration {
+    background:#CADCAE;
+  }
+
+  tr.Equipment td.type, span.Equipment {
+    background:#62677B;
+    color:white;
+  }
+
+  tr.Incantation td.type, span.Incantation {
+    background:#59499C;
+    color:white;
+  }
+
+}
