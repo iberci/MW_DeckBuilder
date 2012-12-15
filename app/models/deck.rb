@@ -55,9 +55,9 @@ class Deck < ActiveRecord::Base
 
   def write_pdf(f)
     pdf = Prawn::Document.new
-    pdf.text deck.title
-    pdf.text deck.description
-    for dc in deck.deck_cards
+    pdf.text self.title
+    pdf.text self.description
+    for dc in self.deck_cards
       pdf.text "#{dc.card.code}, #{dc.amount}, #{dc.card.name}"
     end
     pdf.render_file(f.path)
