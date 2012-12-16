@@ -14,12 +14,13 @@ $().ready(function() {
     get : function(code) {
       return this.entries[code]
     },
-    add : function(card) {
+    add : function(card, amount) {
+      var amount = amount || 1
       var card_entry = this.entries[card.code]
       if(!card_entry) {
         card_entry = this.entries[card.code] = {card : $.extend({}, card), amount : 0}
       } 
-      card_entry.amount = card.amount || _.min([card_entry.amount + 1, card_entry.card.user_max()])
+      card_entry.amount = card.amount || _.min([card_entry.amount + amount, card_entry.card.user_max()])
       return card_entry
     },
     remove : function(code) {
@@ -90,7 +91,7 @@ $().ready(function() {
          var card_entry = deck.get(tr.data('code'))
          card_entry.amount = parseInt($(this).val())
          deckTable.dataTable().fnDraw()
-         updateCosts()
+         updateAmounts()
        })
 
        for(i = 1; i <= max; i++) {
@@ -126,19 +127,12 @@ $().ready(function() {
     $('td.max', tr).text(maxText)
   }
 
-  var updateCosts = function(start) {
+  var updateAmounts = function() {
     _.each(deck.stats(), function(a, c) {
       $('#total_cost_container span.' + c).text(a)
     })
     $("#total_deck_cost").text(deck.cost())
   }
-
-  var updateAll = function() {
-    _.each($('#deck_table tbody tr[data-code]'), updateDeckTr)
-    _.each($('#card_list_table tbody tr[data-code]'), updateListCardCostTr)
-    updateCosts()
-  }
-
 
   var deckTable = $('#deck_table').dataTable({
     bServerSide: true,
@@ -198,7 +192,7 @@ $().ready(function() {
     var tr = $(this).closest('tr')
     deck.remove(tr.data('code'))
     deckTable.fnDeleteRow(tr[0])
-    updateCosts()
+    updateAmounts()
   })
 
   $('#dload_button_container button:not(#upload_btn)').click(_.throttle(function() {
@@ -320,13 +314,17 @@ $().ready(function() {
     })
   })
 
-  $('#mage_select input').change(updateAll)
+  $('#mage_select input').change(function() {
+    _.each($('#card_list_table tbody tr[data-code]'), updateListCardCostTr)
+    deckTable.dataTable().fnDraw()
+    updateAmounts()
+  })
 
   $('#card_list_table').on('click', 'tbody tr button', function() {
     var listTr = $(this).closest('tr')
     deck.add(listTr.data('card'))
     deckTable.dataTable().fnDraw()
-    updateCosts()
+    updateAmounts()
   })
 
   var showCard = _.throttle(function(code) {
@@ -364,9 +362,10 @@ $().ready(function() {
     $("#deck_mage_name").val(wDeck.mage_name)
     $("#deck_title").val(wDeck.title)
     $("#deck_description").val(wDeck.description)
-    _.each(wDeck.deck_cards, function(wDeckCard) {
-      deck.add(extendCard(wDeckCard.card))
+    _.each(wDeck.deck_cards, function(deck_entry) {
+      deck.add(extendCard(deck_entry.card), deck_entry.amount)
     })
+    updateAmounts()
     deckTable.dataTable().fnDraw()
   }
 

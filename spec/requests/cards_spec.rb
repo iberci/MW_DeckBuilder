@@ -8,10 +8,10 @@ describe "Cards" do
     end
   end
 
-  describe "get cards with school filter" do
-    it "only returns cards with 'holy' school" 
-      get cards_path(:params => {:for_school => 'Holy'})
-      response.body.should include('holy')
+  describe "get filtered cards" do
+    it "only returns cards with 'holy' school and type 'Attack'" do 
+      get cards_path(:params => {:for_school => 'Holy', :for_type => 'Attack'})
+      response.body.should include('Blinding Flash')
     end
   end
 end
