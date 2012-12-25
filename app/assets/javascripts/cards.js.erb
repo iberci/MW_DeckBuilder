@@ -226,8 +226,8 @@ $().ready(function() {
     return $.extend({
       cost : function() {
         var cm = costMap()
-        var costs =  _.map(card.levels, function(level_detail) {
-          return level_detail.level * (card.novice ? 1 : cm[level_detail.school_name])
+        var costs =  card.novice ? [1] : _.map(card.levels, function(level_detail) {
+          return level_detail.level * cm[level_detail.school_name]
         })
 
         return (card.or_cost) ?  _.min(costs) : _.reduce(costs, function(memo, cost) { return memo + cost }, 0) 

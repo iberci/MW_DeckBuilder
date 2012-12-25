@@ -5,8 +5,6 @@ gem 'rails', '3.2.6'
 gem 'pg'
 gem 'activerecord-postgresql-adapter'
 
-gem 'debugger'
-
 gem "rspec-rails", :group => [:test, :development]
 group :test do
   gem "factory_girl_rails"
@@ -15,6 +13,7 @@ group :test do
 end
 
 if RUBY_PLATFORM.include? 'linux'
+  gem 'debugger'
   gem 'libv8'
   gem 'therubyracer', '0.10.2'
 end
