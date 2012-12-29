@@ -225,8 +225,11 @@ $().ready(function() {
   var extendCard = function(card) {
     return $.extend({
       cost : function() {
+        if(card.novice) {
+          return 1
+        }
         var cm = costMap()
-        var costs =  card.novice ? [1] : _.map(card.levels, function(level_detail) {
+        var costs =  _.map(card.levels, function(level_detail) {
           return level_detail.level * cm[level_detail.school_name]
         })
 
