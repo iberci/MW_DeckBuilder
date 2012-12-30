@@ -149,7 +149,7 @@ end
   ['mw1e07', 'enchantment', 'Cobra Reflexes', {nature:2}, 2, 5, 0],
   ['mw1e08', 'enchantment', 'Death Link', {dark:2}, 1, 6, 0],
   ['mw1e09', 'enchantment', 'Agony', {dark:1}, 3, 3, 1],
-  ['mw1e10', 'enchantment', 'Decoy', {mind:1}, 4, 2, 1],
+  ['mw1e10', 'enchantment', 'Decoy', {mind:1}, 4, 2, 1, {novice:true}],
   ['mw1e11', 'enchantment', 'Divine Intervention', {holy:3}, 1, 10, 0, {deck_max:1}],
   ['mw1e12', 'enchantment', 'Divine Protection', {holy:1}, 2, 2, 1],
   ['mw1e13', 'enchantment', 'Eagle Wings', {nature:2}, 2, 4, 1],
