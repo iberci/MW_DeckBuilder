@@ -177,7 +177,7 @@ end
   ['mw1e36', 'enchantment', 'Rhino Hide', {nature:1}, 3, 2, 1],
   ['mw1e37', 'enchantment', 'Sacred Ground', {holy:2}, 2, 4, 1],
   ['mw1e38', 'enchantment', 'Teleport Trap', {arcane:1}, 2, 2, 1],
-  ['mw1e39', 'enchantment', 'Turn to Stone', {arcane:2}, 2, 4, 1],
+  ['mw1e39', 'enchantment', 'Turn to Stone', {arcane:2, earth:1}, 2, 4, 1],
   ['mw1e40', 'enchantment', 'Vampirism', {dark:2}, 2, 4, 1]
 ].each { |p| create_card(*p)} 
 
