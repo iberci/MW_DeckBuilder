@@ -163,7 +163,7 @@ end
   ['mw1e21', 'enchantment', 'Hawkeye', {nature:1}, 2, 1, 1],
   ['mw1e22', 'enchantment', 'Hellfire Trap', {dark:1}, 2, 2, 1],
   ['mw1e23', 'enchantment', 'Jinx', {arcane:1}, 2, 1, 2],
-  ['mw1e24', 'enchantment', 'Magebane', {arcane:1}, 1, 3, 0],
+  ['mw1e24', 'enchantment', 'Magebane', {dark:1}, 1, 3, 0],
   ['mw1e25', 'enchantment', 'Maim Wings', {dark:1}, 2, 3, 1],
   ['mw1e27', 'enchantment', 'Marked for Death', {dark:1}, 2, 2, 1],
   ['mw1e28', 'enchantment', 'Mongoose Agility', {nature:1}, 2, 3, 0],
